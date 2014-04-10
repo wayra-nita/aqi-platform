@@ -1,0 +1,60 @@
+<?php
+
+namespace Ya\CoreModelBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Ya\CoreModelBundle\Entity\City as City;
+
+/**
+ * ReportingArea
+ *
+ * @ORM\Table()
+ * @ORM\Entity(repositoryClass="Ya\CoreModelBundle\Entity\ReportingAreaRepository")
+ */
+class ReportingArea
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="area_name", type="string", length=100)
+     */
+    protected $areaName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="latitude", type="decimal")
+     */
+    protected $latitude;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="longitude", type="decimal")
+     */
+    protected $longitude;
+
+  /**
+   * @var City
+   *
+   * @ORM\ManyToOne(targetEntity="City", inversedBy="reportingAreas")
+   * @ORM\JoinColumn(name="city_id", referencedColumnName="id")
+   */
+  protected $city;
+
+  /**
+   * @var ArrayCollection
+   * @ORM\OneToMany(targetEntity="Observation", mappedBy="reportingArea")
+   */
+  protected $observations;
+
+}
