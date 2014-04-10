@@ -1,3 +1,8 @@
+ya_data_collector:
+    resource: "@YaDataCollectorBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 ya_core_model:
     resource: "@YaCoreModelBundle/Resources/config/routing.yml"
     prefix:   /

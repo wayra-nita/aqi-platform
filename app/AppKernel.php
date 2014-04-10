@@ -32,6 +32,7 @@
         new Mopa\Bundle\WSSEAuthenticationBundle\MopaWSSEAuthenticationBundle(),
         new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
         new Ya\CoreModelBundle\YaCoreModelBundle(),
+            new Ya\DataCollectorBundle\YaDataCollectorBundle(),
       );
 
       if (in_array($this->getEnvironment(), array('dev', 'test'))) {

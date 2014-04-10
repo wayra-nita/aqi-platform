@@ -8,7 +8,7 @@ use Ya\CoreModelBundle\Entity\City as City;
 /**
  * ReportingArea
  *
- * @ORM\Table()
+ * @ORM\Table("reporting_area")
  * @ORM\Entity(repositoryClass="Ya\CoreModelBundle\Entity\Repository\ReportingAreaRepository")
  */
 class ReportingArea
