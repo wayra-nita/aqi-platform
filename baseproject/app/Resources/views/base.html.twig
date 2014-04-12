@@ -2,12 +2,43 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        <meta name=”viewport” content=”width=device-width, initial-scale=1.0″>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>{% block title %}Wayra-nita{% endblock %}</title>
+        {% block stylesheets %}
+
+        <link rel="stylesheet" href="{{ asset('bundles/airwebapp/css/bootstrap/bootstrap.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/airwebapp/css/bootstrap/bootstrap-w.css') }}">
+
+            {# Bootstrap fonts #}
+            {% stylesheets output='css/bootstrap/glyphicons-halflings-regular.ttf'
+                           '@AirWebAppBundle/Resources/public/css/bootstrap/fonts/glyphicons-halflings-regular.ttf'
+            %}{% endstylesheets %}
+            {% stylesheets output='css/bootstrap/glyphicons-halflings-regular.eot'
+                           '@AirWebAppBundle/Resources/public/css/bootstrap/fonts/glyphicons-halflings-regular.eot'
+            %}{% endstylesheets %}
+            {% stylesheets output='css/bootstrap/glyphicons-halflings-regular.svg'
+                           '@AirWebAppBundle/Resources/public/css/bootstrap/fonts/glyphicons-halflings-regular.svg'
+            %}{% endstylesheets %}
+            {% stylesheets output='css/bootstrap/glyphicons-halflings-regular.woff'
+                           '@AirWebAppBundle/Resources/public/css/bootstrap/fonts/glyphicons-halflings-regular.woff'
+            %}{% endstylesheets %}
+        {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        {% block javascripts %}            
+            {% javascripts 
+                   '@AirWebAppBundle/Resources/public/js/jquery/*'
+                   '@AirWebAppBundle/Resources/public/js/bootstrap/*'                   
+                   '@AirWebAppBundle/Resources/public/js/backbonejs/*'                   
+            %}
+                <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+                <script type="text/javascript"
+                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDk9eKiJYjvaoDa2g--L4aJvGmqNDrwa8o&sensor=true">
+                </script>
+        {% endblock %}
     </body>
 </html>

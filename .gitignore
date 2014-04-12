@@ -5,6 +5,5 @@ app/logs/*
 vendor/
 app/config/parameters.yml
 composer.phar
-/nbproject/private/
-/baseproject/nbproject/private/
-/crawler/nbproject/private/
+nbproject/
+.idea/

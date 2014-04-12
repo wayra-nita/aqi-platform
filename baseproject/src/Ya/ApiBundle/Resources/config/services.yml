@@ -1,0 +1,7 @@
+parameters:
+#    ya_api.example.class: Ya\ApiBundle\Example
+
+services:
+#    ya_api.example:
+#        class: %ya_api.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

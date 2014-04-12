@@ -1,3 +1,7 @@
+air_web_app:
+    resource: "@AirWebAppBundle/Resources/config/routing.yml"
+    prefix:   /
+
 ya_data_collector:
     resource: "@YaDataCollectorBundle/Controller/"
     type:     annotation
@@ -40,4 +44,5 @@ byexample_demo_securityrest:
 
 api_location:
   resource: Ya\CoreModelBundle\Controller\DefaultController
+  prefix: /data
   type: annotation
