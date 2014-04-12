@@ -6,3 +6,8 @@
 /app/config/parameters.yml
 /composer.phar
 .idea
+/web/css
+/web/js
+/web/images
+project.properties
+project.xml

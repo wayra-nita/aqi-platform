@@ -5,4 +5,10 @@ app/logs/*
 vendor/
 app/config/parameters.yml
 composer.phar
+<<<<<<< HEAD
 /baseproject/nbproject/private/
+=======
+/nbproject/private/
+/baseproject/nbproject/private/
+/crawler/nbproject/private/
+>>>>>>> 2e03bddb81bc10a6b30060b6b6af7d49308dd134
