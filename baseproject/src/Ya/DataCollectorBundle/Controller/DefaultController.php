@@ -14,6 +14,8 @@ class DefaultController extends Controller
      */
     public function indexAction($name)
     {
-        return array('name' => $name);
+      $collector = $this->container->get('collector.airnow');
+      $collector->collectData();
+      die('bla');
     }
 }
