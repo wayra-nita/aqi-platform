@@ -3,13 +3,17 @@
 namespace Ya\CoreModelBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\AccessType;
 use Ya\CoreModelBundle\Entity\Region as Region;
 
 /**
  * Country
  *
  * @ORM\Table(name="country")
- * @ORM\Entity(repositoryClass="Ya\CoreModelBundle\Entity\Repository")
+ * @ORM\Entity(repositoryClass="Ya\CoreModelBundle\Entity\Repository\CountryRepository")
+ * @ExclusionPolicy("none")
  */
 class Country
 {
@@ -80,9 +84,15 @@ class Country
 
   /**
    * @var ArrayCollection
-   * @ORM\OneToMany(targetEntity="Region", mappedBy="Country")
+   * @ORM\OneToMany(targetEntity="Region", mappedBy="country")
    */
   protected $regions;
+
+  /**
+   * @var ArrayCollection
+   * @ORM\OneToMany(targetEntity="City", mappedBy="country")
+   */
+  protected $cities;
 
   /**
    * Constructor
@@ -318,4 +328,37 @@ class Country
   {
     return $this->regions;
   }
+
+    /**
+     * Add cities
+     *
+     * @param \Ya\CoreModelBundle\Entity\City $cities
+     * @return Country
+     */
+    public function addCitie(\Ya\CoreModelBundle\Entity\City $cities)
+    {
+        $this->cities[] = $cities;
+    
+        return $this;
+    }
+
+    /**
+     * Remove cities
+     *
+     * @param \Ya\CoreModelBundle\Entity\City $cities
+     */
+    public function removeCitie(\Ya\CoreModelBundle\Entity\City $cities)
+    {
+        $this->cities->removeElement($cities);
+    }
+
+    /**
+     * Get cities
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCities()
+    {
+        return $this->cities;
+    }
 }
