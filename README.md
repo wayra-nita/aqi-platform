@@ -1,2 +1,2 @@
-aqui-platform
+aqi-platform
 =============
