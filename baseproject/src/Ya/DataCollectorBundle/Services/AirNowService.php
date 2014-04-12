@@ -11,4 +11,4 @@ namespace Ya\DataCollectorBundle\Services;
 
 class AirNowService {
 
-} 
+  }
