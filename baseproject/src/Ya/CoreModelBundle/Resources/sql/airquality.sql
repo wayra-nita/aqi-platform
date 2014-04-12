@@ -114,7 +114,8 @@ DROP TABLE IF EXISTS `data_type_enum`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `data_type_enum` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `string` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `code` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -125,7 +126,10 @@ CREATE TABLE `data_type_enum` (
 
 LOCK TABLES `data_type_enum` WRITE;
 /*!40000 ALTER TABLE `data_type_enum` DISABLE KEYS */;
-INSERT INTO `data_type_enum` VALUES (1,'F'),(2,'Y'),(3,'O');
+INSERT INTO `data_type_enum` (`id`, `code`, `description`) VALUES
+(1, 'F', 'Forecast'),
+(2, 'Y', 'Yesterday AQI'),
+(3, 'O', 'Hourly AQI Observation');
 /*!40000 ALTER TABLE `data_type_enum` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -258,6 +262,8 @@ CREATE TABLE `observation` (
   `is_action_day` tinyint(1) NOT NULL,
   `discussion` longtext COLLATE utf8_unicode_ci,
   `forecast_source` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created` datetime NOT NULL,
+  `updated` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `IDX_C576DBE09393F8FE` (`partner_id`),
   KEY `IDX_C576DBE02368478D` (`sequence_enum_id`),
