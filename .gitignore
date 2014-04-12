@@ -6,9 +6,15 @@ vendor/
 app/config/parameters.yml
 composer.phar
 <<<<<<< HEAD
+<<<<<<< HEAD
 /baseproject/nbproject/private/
 =======
 /nbproject/private/
 /baseproject/nbproject/private/
 /crawler/nbproject/private/
 >>>>>>> 2e03bddb81bc10a6b30060b6b6af7d49308dd134
+=======
+/nbproject/private/
+/baseproject/nbproject/private/
+/crawler/nbproject/private/
+>>>>>>> 93fea53bade1db79b636b7060c2e022af4716b66
