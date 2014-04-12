@@ -3,6 +3,9 @@
 namespace Ya\CoreModelBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\AccessType;
 use Ya\CoreModelBundle\Entity\City as City;
 use Ya\CoreModelBundle\Entity\Country as Country;
 
@@ -11,6 +14,7 @@ use Ya\CoreModelBundle\Entity\Country as Country;
  *
  * @ORM\Table(name="region")
  * @ORM\Entity(repositoryClass="Ya\CoreModelBundle\Entity\Repository\RegionRepository")
+ * @ExclusionPolicy("none")
  */
 class Region
 {
@@ -40,14 +44,14 @@ class Region
   /**
    * @var string
    *
-   * @ORM\Column(name="code", type="string", length=8, nullable=false)
+   * @ORM\Column(name="code", type="string", length=8, nullable=true)
    */
   protected $code;
 
   /**
    * @var string
    *
-   * @ORM\Column(name="ADM1Code", type="string", length=4, nullable=false)
+   * @ORM\Column(name="ADM1Code", type="string", length=4, nullable=true)
    */
   protected $adm1code;
 

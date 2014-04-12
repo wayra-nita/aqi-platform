@@ -4,6 +4,9 @@ namespace Ya\CoreModelBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\AccessType;
 use Ya\CoreModelBundle\Entity\DataTypeEnum as DataTypeEnum;
 use Ya\CoreModelBundle\Entity\SequenceEnum as SequenceEnum;
 use Ya\CoreModelBundle\Entity\AirQualityCategory as AirQualityCategory;
@@ -13,6 +16,7 @@ use Ya\CoreModelBundle\Entity\AirQualityCategory as AirQualityCategory;
  *
  * @ORM\Table("observation")
  * @ORM\Entity(repositoryClass="Ya\CoreModelBundle\Entity\Repository\ObservationRepository")
+ * @ExclusionPolicy("none")
  */
 class Observation
 {

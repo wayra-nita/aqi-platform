@@ -3,6 +3,9 @@
 namespace Ya\CoreModelBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\AccessType;
 use Ya\CoreModelBundle\Entity\Region as Region;
 
 /**
@@ -10,6 +13,7 @@ use Ya\CoreModelBundle\Entity\Region as Region;
  *
  * @ORM\Table(name="city")
  * @ORM\Entity(repositoryClass="Ya\CoreModelBundle\Entity\Repository\CityRepository")
+ * @ExclusionPolicy("none")
  */
 class City
 {
@@ -23,20 +27,6 @@ class City
   protected $id;
 
   /**
-   * @var integer
-   *
-   * @ORM\Column(name="country_id", type="integer", nullable=false)
-   */
-  protected $countryId;
-
-  /**
-   * @var integer
-   *
-   * @ORM\Column(name="region_id", type="integer", nullable=false)
-   */
-  protected $regionId;
-
-  /**
    * @var string
    *
    * @ORM\Column(name="name", type="string", length=45, nullable=false)
@@ -46,21 +36,21 @@ class City
   /**
    * @var float
    *
-   * @ORM\Column(name="latitude", type="float", precision=10, scale=0, nullable=false)
+   * @ORM\Column(name="latitude", type="float", nullable=true)
    */
   protected $latitude;
 
   /**
    * @var float
    *
-   * @ORM\Column(name="longitude", type="float", precision=10, scale=0, nullable=false)
+   * @ORM\Column(name="longitude", type="float", nullable=true)
    */
   protected $longitude;
 
   /**
    * @var string
    *
-   * @ORM\Column(name="time_zone", type="string", length=10, nullable=false)
+   * @ORM\Column(name="time_zone", type="string", length=10, nullable=true)
    */
   protected $timeZone;
 
@@ -78,6 +68,14 @@ class City
    * @ORM\JoinColumn(name="region_id", referencedColumnName="id")
    */
   protected $region;
+
+  /**
+   * @var Country
+   *
+   * @ORM\ManyToOne(targetEntity="Country", inversedBy="cities")
+   * @ORM\JoinColumn(name="country_id", referencedColumnName="id")
+   */
+  protected $country;
 
   /**
    * @var ArrayCollection
@@ -101,52 +99,6 @@ class City
   public function getId()
   {
     return $this->id;
-  }
-
-  /**
-   * Set countryId
-   *
-   * @param integer $countryId
-   * @return City
-   */
-  public function setCountryId($countryId)
-  {
-    $this->countryId = $countryId;
-
-    return $this;
-  }
-
-  /**
-   * Get countryId
-   *
-   * @return integer
-   */
-  public function getCountryId()
-  {
-    return $this->countryId;
-  }
-
-  /**
-   * Set regionId
-   *
-   * @param integer $regionId
-   * @return City
-   */
-  public function setRegionId($regionId)
-  {
-    $this->regionId = $regionId;
-
-    return $this;
-  }
-
-  /**
-   * Get regionId
-   *
-   * @return integer
-   */
-  public function getRegionId()
-  {
-    return $this->regionId;
   }
 
   /**
@@ -265,29 +217,6 @@ class City
   }
 
   /**
-   * Set region
-   *
-   * @param \Ya\CoreModelBundle\Entity\Region $region
-   * @return City
-   */
-  public function setRegion(\Ya\CoreModelBundle\Entity\Region $region = null)
-  {
-    $this->region = $region;
-
-    return $this;
-  }
-
-  /**
-   * Get region
-   *
-   * @return \Ya\CoreModelBundle\Entity\Region
-   */
-  public function getRegion()
-  {
-    return $this->region;
-  }
-
-  /**
    * Add reportingAreas
    *
    * @param \Ya\CoreModelBundle\Entity\ReportingArea $reportingAreas
@@ -319,4 +248,50 @@ class City
   {
     return $this->reportingAreas;
   }
+
+    /**
+     * Set region
+     *
+     * @param \Ya\CoreModelBundle\Entity\Region $region
+     * @return City
+     */
+    public function setRegion(\Ya\CoreModelBundle\Entity\Region $region = null)
+    {
+        $this->region = $region;
+    
+        return $this;
+    }
+
+    /**
+     * Get region
+     *
+     * @return \Ya\CoreModelBundle\Entity\Region 
+     */
+    public function getRegion()
+    {
+        return $this->region;
+    }
+
+    /**
+     * Set country
+     *
+     * @param \Ya\CoreModelBundle\Entity\Country $country
+     * @return City
+     */
+    public function setCountry(\Ya\CoreModelBundle\Entity\Country $country = null)
+    {
+        $this->country = $country;
+    
+        return $this;
+    }
+
+    /**
+     * Get country
+     *
+     * @return \Ya\CoreModelBundle\Entity\Country 
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
 }

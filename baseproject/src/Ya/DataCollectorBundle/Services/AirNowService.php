@@ -20,6 +20,8 @@ use Ya\CoreModelBundle\Entity\SequenceEnum as SequenceEnum;
 {
   const FILE_PATH = 'airnow/reportingarea.dat';
   const FIELDS_COUNT_EXPECTED = 17;
+  const COUNTRY_CODE = 'US';
+  const PARTNER_NAME = 'AirNow';
   /**
    * @var Doctrine\ORM\EntityManager
    */
@@ -50,8 +52,6 @@ use Ya\CoreModelBundle\Entity\SequenceEnum as SequenceEnum;
       return $result;
     }
     $this->parseFile();
-    $airQualityCategory = $this->em->getRepository('YaCoreModelBundle:AirQualityCategory')->findOneById(1);
-    var_dump($airQualityCategory); exit;
     die('collect');
   }
 
@@ -67,13 +67,21 @@ use Ya\CoreModelBundle\Entity\SequenceEnum as SequenceEnum;
 
   protected function parseFile()
   {
+    $partner = $this->em->getRepository('YaCoreModelBundle:Partner')->findOneByName(self::PARTNER_NAME);
     $path = $this->kernel->locateResource('@YaDataCollectorBundle/Resources/downloads/' . self::FILE_PATH);
     $handle = fopen($path, "r");
+
     if ($handle)
     {
+      $count = 0;
       while (($line = fgets($handle)) !== false)
       {
-        $this->parseLine($line);
+        $this->parseLine($line, $partner);
+        if ($count % 500 == 0)
+        {
+          $this->em->flush();
+        }
+        $count++;
       }
     }
     else
@@ -81,10 +89,11 @@ use Ya\CoreModelBundle\Entity\SequenceEnum as SequenceEnum;
       return self::RESULT_UNABLE_TO_OPEN_FILE;
     }
     fclose($handle);
+    $this->em->flush();
     return self::RESULT_OK;
   }
 
-  protected function parseLine($line)
+  protected function parseLine($line, $partner)
   {
     // Fields description at Resources/doc/ReportingAreaFactSheet.pdf
     $fields = explode('|', $line);
@@ -94,12 +103,30 @@ use Ya\CoreModelBundle\Entity\SequenceEnum as SequenceEnum;
     }
 
     $observation = new Observation();
+    $observation->setPartner($partner);
     $observation->setIssueDate(new \DateTime($fields[0]));
     $observation->setValidDate(new \DateTime($fields[1] . ' ' . $fields[2]));
-    //$observation->set
-
-
-    $observation->setAirQualityCategory();
+    $observation->setTimeZone($fields[3]);
+    $sequence = $this->em->getRepository('YaCoreModelBundle:SequenceEnum')->findOneById($fields[4]);
+    $observation->setSequence($sequence);
+    $dataType = $this->em->getRepository('YaCoreModelBundle:DataTypeEnum')->findOneByCode($fields[5]);
+    $observation->setDataType($dataType);
+    $observation->setIsPrimary($fields[6] == 'Y');
+    $cityName = trim($fields[7]);
+    $regionCode = trim($fields[8]);
+    $latitude = trim($fields[9]);
+    $longitude = trim($fields[10]);
+    $reportingArea = $this->em->getRepository('YaCoreModelBundle:ReportingArea')->
+      getOrCreateReportingArea(self::COUNTRY_CODE, $regionCode, $cityName, $latitude, $longitude);
+    $observation->setReportingArea(($reportingArea));
+    $observation->setParameterName($fields[11]);
+    $observation->setAqiValue($fields[12]);
+    $aqiCategory = $this->em->getRepository('YaCoreModelBundle:AirQualityCategory')->findOneByName($fields[13]);
+    $observation->setAirQualityCategory($aqiCategory);
+    $observation->setIsActionDay($fields[14] == 'Yes');
+    $observation->setDiscussion(trim($fields[15]));
+    $observation->setForecastSource(trim($fields[16]));
+    $this->em->persist($observation);
   }
 
 }
