@@ -45,9 +45,22 @@ class ObservationApiController extends FOSRestController {
         $observation = $this->setIfAvailable($observation, $observationData, 'time_zone');
         $observation = $this->setFromRepositoryById($observation, $observationData, 'sequence_id', 'SequenceEnum', 'setSequence');
         $observation = $this->setFromRepositoryById($observation, $observationData, 'data_type_id', 'DataTypeEnum', 'setDataType');
+        $observation = $this->setIfAvailable($observation, $observationData, 'valid_date');
+        // add air quality enum here
+        // get $reportingArea
+        $observation = $this->setIfAvailable($observation, $observationData, 'is_primary', 0);
+        $observation = $this->setIfAvailable($observation, $observationData, 'parameter_name');
+        $observation = $this->setIfAvailable($observation, $observationData, 'aqi_value');
+        $observation = $this->setIfAvailable($observation, $observationData, 'is_action_day', 0);
+        $observation = $this->setIfAvailable($observation, $observationData, 'discussion');
+        $observation = $this->setIfAvailable($observation, $observationData, 'forecast_source');
 
         $em->persist($observation);
         $em->flush();
+
+        $response = new Response();
+        $response->setStatusCode('200', 'Record added');
+        return $response;
     }
 
     private function setFromRepositoryById(Observation $observation, $data, $source, $className, $method = null, $bundle = 'YaCoreModelBundle') {
@@ -72,11 +85,13 @@ class ObservationApiController extends FOSRestController {
         return null;
     }
 
-    private function setIfAvailable(Observation $observation, $data, $source) {
+    private function setIfAvailable(Observation $observation, $data, $source, $default = null) {
         $data = $this->getIfAvailable($data, $source);
         $method = $this->getMethod($source, 'set');
         if ($data) {
             $observation->$method($data);
+        } elseif ($default !== null) {
+            $observation->$method($default);
         }
         return $observation;
     }
