@@ -3,6 +3,9 @@
 namespace Ya\CoreModelBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\AccessType;
 use Ya\CoreModelBundle\Entity\Observation as Observation;
 
 /**
@@ -10,6 +13,7 @@ use Ya\CoreModelBundle\Entity\Observation as Observation;
  *
  * @ORM\Table("data_type_enum")
  * @ORM\Entity(repositoryClass="Ya\CoreModelBundle\Entity\Repository\DataTypeEnumRepository")
+ * @ExclusionPolicy("none")
  */
 class DataTypeEnum
 {
@@ -25,9 +29,16 @@ class DataTypeEnum
   /**
    * @var string
    *
-   * @ORM\Column(name="string", type="string", length=20)
+   * @ORM\Column(name="code", type="string", length=10)
    */
-  protected $string;
+  protected $code;
+
+  /**
+   * @var string
+   *
+   * @ORM\Column(name="description", type="string", length=100)
+   */
+  protected $description;
 
   /**
    * @var ArrayCollection
@@ -108,4 +119,50 @@ class DataTypeEnum
   {
     return $this->observations;
   }
+
+    /**
+     * Set code
+     *
+     * @param string $code
+     * @return DataTypeEnum
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+    
+        return $this;
+    }
+
+    /**
+     * Get code
+     *
+     * @return string 
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return DataTypeEnum
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string 
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
 }

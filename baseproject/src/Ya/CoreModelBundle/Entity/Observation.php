@@ -3,6 +3,10 @@
 namespace Ya\CoreModelBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\AccessType;
 use Ya\CoreModelBundle\Entity\DataTypeEnum as DataTypeEnum;
 use Ya\CoreModelBundle\Entity\SequenceEnum as SequenceEnum;
 use Ya\CoreModelBundle\Entity\AirQualityCategory as AirQualityCategory;
@@ -12,6 +16,7 @@ use Ya\CoreModelBundle\Entity\AirQualityCategory as AirQualityCategory;
  *
  * @ORM\Table("observation")
  * @ORM\Entity(repositoryClass="Ya\CoreModelBundle\Entity\Repository\ObservationRepository")
+ * @ExclusionPolicy("none")
  */
 class Observation
 {
@@ -148,6 +153,23 @@ class Observation
    * @ORM\Column(name="forecast_source", type="string", length=100, nullable=true)
    */
   protected $forecastSource;
+
+  /**
+   * Date when the row was created
+   *
+   * @var datetime $created
+   * @Gedmo\Timestampable(on="create")
+   * @ORM\Column(type="datetime")
+   */
+  protected $created;
+
+  /**
+   * Date when the row was updated
+   * @var datetime $updated
+   * @Gedmo\Timestampable(on="update")
+   * @ORM\Column(type="datetime")
+   */
+  protected $updated;
 
 
   /**
@@ -481,4 +503,50 @@ class Observation
   {
     return $this->reportingArea;
   }
+
+    /**
+     * Set created
+     *
+     * @param \DateTime $created
+     * @return Observation
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime 
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set updated
+     *
+     * @param \DateTime $updated
+     * @return Observation
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+    
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return \DateTime 
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
 }

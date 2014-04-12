@@ -3,6 +3,9 @@
 namespace Ya\CoreModelBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\AccessType;
 use Ya\CoreModelBundle\Entity\City as City;
 
 /**
@@ -10,6 +13,7 @@ use Ya\CoreModelBundle\Entity\City as City;
  *
  * @ORM\Table("reporting_area")
  * @ORM\Entity(repositoryClass="Ya\CoreModelBundle\Entity\Repository\ReportingAreaRepository")
+ * @ExclusionPolicy("none")
  */
 class ReportingArea
 {
@@ -32,14 +36,14 @@ class ReportingArea
   /**
    * @var string
    *
-   * @ORM\Column(name="latitude", type="decimal")
+   * @ORM\Column(name="latitude", type="float")
    */
   protected $latitude;
 
   /**
    * @var string
    *
-   * @ORM\Column(name="longitude", type="decimal")
+   * @ORM\Column(name="longitude", type="float")
    */
   protected $longitude;
 
@@ -99,52 +103,6 @@ class ReportingArea
   }
 
   /**
-   * Set latitude
-   *
-   * @param string $latitude
-   * @return ReportingArea
-   */
-  public function setLatitude($latitude)
-  {
-    $this->latitude = $latitude;
-
-    return $this;
-  }
-
-  /**
-   * Get latitude
-   *
-   * @return string
-   */
-  public function getLatitude()
-  {
-    return $this->latitude;
-  }
-
-  /**
-   * Set longitude
-   *
-   * @param string $longitude
-   * @return ReportingArea
-   */
-  public function setLongitude($longitude)
-  {
-    $this->longitude = $longitude;
-
-    return $this;
-  }
-
-  /**
-   * Get longitude
-   *
-   * @return string
-   */
-  public function getLongitude()
-  {
-    return $this->longitude;
-  }
-
-  /**
    * Set city
    *
    * @param \Ya\CoreModelBundle\Entity\City $city
@@ -199,4 +157,50 @@ class ReportingArea
   {
     return $this->observations;
   }
+
+    /**
+     * Set latitude
+     *
+     * @param float $latitude
+     * @return ReportingArea
+     */
+    public function setLatitude($latitude)
+    {
+        $this->latitude = $latitude;
+    
+        return $this;
+    }
+
+    /**
+     * Get latitude
+     *
+     * @return float 
+     */
+    public function getLatitude()
+    {
+        return $this->latitude;
+    }
+
+    /**
+     * Set longitude
+     *
+     * @param float $longitude
+     * @return ReportingArea
+     */
+    public function setLongitude($longitude)
+    {
+        $this->longitude = $longitude;
+    
+        return $this;
+    }
+
+    /**
+     * Get longitude
+     *
+     * @return float 
+     */
+    public function getLongitude()
+    {
+        return $this->longitude;
+    }
 }
