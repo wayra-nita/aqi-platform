@@ -25,7 +25,6 @@ class GridController extends FOSRestController {
         $swLng = $request->get('swLng');
         $squares = $this->getSquares($neLat, $neLng, $swLat, $swLng);
         $squares = $this->fillColors($squares);
-        print_r($squares); exit;
         return new Response($this->get('serializer')->serialize($squares, "json"));
     }
     
@@ -40,6 +39,7 @@ class GridController extends FOSRestController {
             if (!$count) {
                 $square['color'] = '#FFFFFF';
                 $square['name']  = 'Not enough data';
+                $square['average'] = 0;
                 continue;
             }
             //$average = $visualization->getAverageByQuadrant(32.9, -112.072, 43.1105, -110.972);
@@ -52,6 +52,7 @@ class GridController extends FOSRestController {
             $airQualityCategory = $airQualityCategory[0];
             $square['color'] = $this->convertRgbToHex($airQualityCategory->getColorCode());
             $square['name']  = $airQualityCategory->getName();
+            $square['average'] = $average;
         }
         return $squares;
     }
