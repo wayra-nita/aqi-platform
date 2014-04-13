@@ -21,3 +21,50 @@ img.img_data_set{
   width: 120px;
   max-height: 120px;
 }
+
+
+
+.sample {
+    padding: 15px;
+    margin-bottom: 20px;
+    margin-left: 30px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    width: 80%;
+}
+
+.good {
+    color: #000000;
+    background-color: #00e400;
+    opacity: 0.6;        
+}
+
+.moderate {
+    color: #000000;
+    background-color: #ffff00;
+    opacity: 0.6;
+}
+
+.unhealthy-sen-grs {
+    color: #000000;
+    background-color: #ff7e00;
+    opacity: 0.6;
+}
+
+.unhealthy {
+    color: #000000;
+    background-color: #ff0000;
+    opacity: 0.6;
+}
+
+.very-unhealthy {
+    color: #000000;
+    background-color: #99004c;
+    opacity: 0.6;
+}
+
+.hazaourds {
+    color: #000000;
+    background-color: #4c0026;
+    opacity: 0.6;
+}
