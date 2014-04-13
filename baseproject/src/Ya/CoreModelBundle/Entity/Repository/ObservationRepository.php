@@ -26,7 +26,16 @@ class ObservationRepository extends EntityRepository
   
   public function getCountInQuadrant($lat1, $lon1, $lat2, $lon2)
   {
-    $em = $this->getEntityManager();
+    $sql = "SELECT COUNT(o.aqi_value) FROM observation o
+LEFT JOIN reporting_area ra ON ra.id = o.reporting_area_id
+WHERE o.parameter_name = 'PM2.5'
+AND o.aqi_value <> 0
+AND (ra.latitude >= ? AND ra.latitude <= ?) AND (ra.longitude >= ? AND ra.longitude <= ?)";
+
+    $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+    $stmt->execute(array($lat1, $lon1, $lat2, $lon2));
+    return($stmt->fetchAll());
+    /*$em = $this->getEntityManager();
     $query = $em->createQueryBuilder()
       ->select('COUNT(o.aqiValue)')
       ->from('Ya\CoreModelBundle\Entity\Observation', 'o')
@@ -37,22 +46,19 @@ class ObservationRepository extends EntityRepository
       ->setParameter('lat2', $lat2)
       ->setParameter('lon1', $lon1)
       ->setParameter('lon2', $lon2);
-    return $query->getQuery()->setHydrationMode(\Doctrine\ORM\AbstractQuery::HYDRATE_SINGLE_SCALAR)->execute();
+    return $query->getQuery()->setHydrationMode(\Doctrine\ORM\AbstractQuery::HYDRATE_SINGLE_SCALAR)->execute();*/
   }
 
   public function getByQuadrant($lat1, $lon1, $lat2, $lon2)
   {
-    $em = $this->getEntityManager();
-    $query = $em->createQueryBuilder()
-      ->select('AVG(o.aqiValue)')
-      ->from('Ya\CoreModelBundle\Entity\Observation', 'o')
-      ->leftJoin('Ya\CoreModelBundle\Entity\ReportingArea', 'ra')
-      ->where('ra.latitude >= :lat1 AND ra.latitude <= :lat2')
-      ->andWhere('ra.longitude >= :lon1 AND ra.longitude <= :lon2')
-      ->setParameter('lat1', $lat1)
-      ->setParameter('lat2', $lat2)
-      ->setParameter('lon1', $lon1)
-      ->setParameter('lon2', $lon2);
-    return $query->getQuery()->setHydrationMode(\Doctrine\ORM\AbstractQuery::HYDRATE_SINGLE_SCALAR)->execute();
+    $sql = "SELECT AVG(o.aqi_value) FROM observation o
+LEFT JOIN reporting_area ra ON ra.id = o.reporting_area_id
+WHERE o.parameter_name = 'PM2.5'
+AND o.aqi_value <> 0
+AND (ra.latitude >= ? AND ra.latitude <= ?) AND (ra.longitude >= ? AND ra.longitude <= ?)";
+
+    $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+    $stmt->execute(array($lat1, $lon1, $lat2, $lon2));
+    return($stmt->fetchAll());
   }
 }
