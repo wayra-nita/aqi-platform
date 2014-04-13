@@ -3,6 +3,7 @@
 namespace Ya\CoreModelBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Security\Acl\Domain\DoctrineAclCache;
 
 /**
  * ObservationRepository
@@ -12,4 +13,14 @@ use Doctrine\ORM\EntityRepository;
  */
 class ObservationRepository extends EntityRepository
 {
+  public function getById($id)
+  {
+    $em = $this->getEntityManager();
+    $query = $em->createQueryBuilder()
+      ->select('o')
+      ->from('Ya\CoreModelBundle\Entity\Observation', 'o')
+      ->where('o.id <= :id')
+      ->setParameter('id', $id);
+    return $query->getQuery()->setHydrationMode(\Doctrine\ORM\AbstractQuery::HYDRATE_ARRAY)->execute();
+  }
 }

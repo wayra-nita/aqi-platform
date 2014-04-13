@@ -15,13 +15,12 @@ class ObservationApiController extends FOSRestController {
      * @Method("GET")
      * @Route("/api/observation", name = "api_get_observation")
      */
-    public function getObservationAction() {
-      die('123');
-        $em = $this->getDoctrine()->getManager();
-        $observations = $em->getRepository('YaCoreModelBundle:Observation')
-                ->findAll();
-
-        return new \Symfony\Component\HttpFoundation\Response($this->get('serializer')->serialize($observations, "json"));
+    public function getObservationAction()
+    {
+      $consumer = $this->container->get('consumer.visualization');
+      $observations = $consumer->getAverageByCountry();
+      echo json_encode($observations);
+      exit;
     }
 
     /**

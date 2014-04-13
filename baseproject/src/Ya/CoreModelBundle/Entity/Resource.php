@@ -3,16 +3,12 @@
 namespace Ya\CoreModelBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
-use JMS\Serializer\Annotation\AccessType;
 
 /**
  * Resoruce
  *
  * @ORM\Table("resource")
  * @ORM\Entity(repositoryClass="Ya\CoreModelBundle\Entity\Repository\ResourceRepository")
- * @ExclusionPolicy("none")
  */
 class Resource
 {

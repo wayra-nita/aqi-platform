@@ -3,16 +3,12 @@
 namespace Ya\CoreModelBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
-use JMS\Serializer\Annotation\AccessType;
 
 /**
  * Partner
  *
  * @ORM\Table("partner")
  * @ORM\Entity(repositoryClass="Ya\CoreModelBundle\Entity\Repository\PartnerRepository")
- * @ExclusionPolicy("none")
  */
 class Partner
 {

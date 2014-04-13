@@ -10,13 +10,14 @@ use JMS\Serializer\Annotation\AccessType;
 use Ya\CoreModelBundle\Entity\DataTypeEnum as DataTypeEnum;
 use Ya\CoreModelBundle\Entity\SequenceEnum as SequenceEnum;
 use Ya\CoreModelBundle\Entity\AirQualityCategory as AirQualityCategory;
+use Ya\CoreModelBundle\Entity\ReportingArea as ReportingArea;
 
 /**
  * Observation
  *
  * @ORM\Table("observation")
  * @ORM\Entity(repositoryClass="Ya\CoreModelBundle\Entity\Repository\ObservationRepository")
- * @ExclusionPolicy("none")
+ * @ExclusionPolicy("all")
  */
 class Observation
 {
@@ -26,6 +27,7 @@ class Observation
    * @ORM\Column(name="id", type="integer")
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="AUTO")
+
    */
   protected $id;
 
@@ -35,6 +37,7 @@ class Observation
    *
    * @ORM\ManyToOne(targetEntity="Partner", inversedBy="observations")
    * @ORM\JoinColumn(name="partner_id", referencedColumnName="id")
+
    */
   protected $partner;
 
@@ -52,6 +55,7 @@ class Observation
    * Local date for which forecast is valid or local date on which an observation is made.
    *
    * @ORM\Column(name="valid_date", type="date", nullable=true)
+
    */
   protected $validDate;
 
@@ -60,6 +64,7 @@ class Observation
    * Time zone for report observations. Note that for forecasts and yesterday’s AQI, this field will be blank.
    *
    * @ORM\Column(name="time_zone", type="string", length=3, nullable=true)
+
    */
   protected $timeZone;
 
@@ -101,6 +106,7 @@ class Observation
    *
    * @ORM\ManyToOne(targetEntity="ReportingArea", inversedBy="observations")
    * @ORM\JoinColumn(name="reporting_area_id", referencedColumnName="id")
+
    */
   protected $reportingArea;
 
@@ -117,6 +123,7 @@ class Observation
    * Name of the parameter reported in that record.
    *
    * @ORM\Column(name="parameter_name", type="string", length=10, nullable=true)
+
    */
   protected $parameterName;
 
@@ -125,7 +132,8 @@ class Observation
    * 0 to 500. AQI value for the reporting area for the day.
    * This field is blank for cities with only AQI categorical forecasts.
    *
-   * @ORM\Column(name="aqi_value", type="boolean", nullable=true)
+   * @ORM\Column(name="aqi_value", type="integer", nullable=true)
+
    */
   protected $aqiValue;
 
@@ -134,6 +142,7 @@ class Observation
    * This field indicates whether an air quality action day is issued
    *
    * @ORM\Column(name="is_action_day", type="boolean")
+
    */
   protected $isActionDay;
 
@@ -143,6 +152,7 @@ class Observation
    * this field will be blank.
    *
    * @ORM\Column(name="discussion", type="text", nullable=true)
+
    */
   protected $discussion;
 
@@ -151,6 +161,7 @@ class Observation
    * Name of agency submitting forecast.
    *
    * @ORM\Column(name="forecast_source", type="string", length=100, nullable=true)
+
    */
   protected $forecastSource;
 
@@ -160,6 +171,7 @@ class Observation
    * @var datetime $created
    * @Gedmo\Timestampable(on="create")
    * @ORM\Column(type="datetime")
+
    */
   protected $created;
 
