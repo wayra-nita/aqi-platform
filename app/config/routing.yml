@@ -1,3 +1,7 @@
+ya_api:
+    resource: "@YaApiBundle/Resources/config/routing.yml"
+    prefix:   /
+
 ya_data_collector:
     resource: "@YaDataCollectorBundle/Controller/"
     type:     annotation
