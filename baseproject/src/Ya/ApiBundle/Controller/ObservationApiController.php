@@ -46,7 +46,10 @@ class ObservationApiController extends FOSRestController {
         $observation = $this->setFromRepositoryById($observation, $observationData, 'sequence_id', 'SequenceEnum', 'setSequence');
         $observation = $this->setFromRepositoryById($observation, $observationData, 'data_type_id', 'DataTypeEnum', 'setDataType');
         $observation = $this->setIfAvailable($observation, $observationData, 'valid_date');
-        // add air quality enum here
+        if (isset($observationData['air_quality'])) {
+            $airQualityCategory = $em->getRepository('YaCoreModelBundle:AirQualityCategory')->getByAqiValue($observationData['air_quality']);
+            $observation->setAirQualityCategory($airQualityCategory);
+        }
         // get $reportingArea
         $observation = $this->setIfAvailable($observation, $observationData, 'is_primary', 0);
         $observation = $this->setIfAvailable($observation, $observationData, 'parameter_name');
