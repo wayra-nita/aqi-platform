@@ -19,7 +19,7 @@ class VisualizationService extends AbstractConsumerService
 {
   public function getAverageByQuadrant()
   {
-    $lat1 = 60;
+    $lat1 = 61;
     $lon1 = 147;
     $lat2 = 63;
     $lon2 = 149;

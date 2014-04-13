@@ -1,6 +1,6 @@
 parameters:
     consumer.visualization.class: Ya\DataConsumerBundle\Services\VisualizationService
- 
+# Service list
 services:
     consumer.visualization:
         class: "%consumer.visualization.class%"
