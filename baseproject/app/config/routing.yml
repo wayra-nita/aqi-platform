@@ -12,10 +12,10 @@ air_web_app:
     resource: "@AirWebAppBundle/Resources/config/routing.yml"
     prefix:   /
 
-ya_data_collector:
-    resource: "@YaDataCollectorBundle/Controller/"
-    type:     annotation
-    prefix:   /collector
+#ya_data_collector:
+#    resource: "@YaDataCollectorBundle/Controller/"
+#    type:     annotation
+#    prefix:   /collector
 
 ya_core_model:
     resource: "@YaCoreModelBundle/Resources/config/routing.yml"
@@ -50,6 +50,10 @@ NelmioApiDocBundle:
 
 byexample_demo_securityrest:
   resource: Ya\CoreModelBundle\Controller\SecurityController
+  type: rest
+  
+resource_loc:
+  resource: Ya\DataCollectorBundle\Controller\ResourceController
   type: rest
 
 api_location:
