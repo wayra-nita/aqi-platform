@@ -50,6 +50,16 @@ class ObservationApiController extends FOSRestController {
             $airQualityCategory = $em->getRepository('YaCoreModelBundle:AirQualityCategory')->getByAqiValue($observationData['air_quality']);
             $observation->setAirQualityCategory($airQualityCategory);
         }
+        if (isset($observation['country_code'])
+                && isset($observation['region_code'])
+                && isset($observation['city_name'])
+                && isset($observation['latitude'])
+                && isset($observation['longitude'])) {
+            $reportingArea = $em->getRepository('YaCoreModelBundle:ReportingArea')
+                    ->getOrCreateReportingArea($observation['country_code'], $observation['region_code'], $observation['city_name'], $observation['latitude'], $observation['longitude']);
+            $observation->setReportingArea($reportingArea);
+        }
+        
         // get $reportingArea
         $observation = $this->setIfAvailable($observation, $observationData, 'is_primary', 0);
         $observation = $this->setIfAvailable($observation, $observationData, 'parameter_name');
