@@ -15,11 +15,12 @@ import os
 import json
 from pprint import pprint
 import shutil
+import sys
 
 upload_url = "http://aqi.local/resource/"
 files_to_process_path = "metadata"
 files_processed_path = "uploaded"
-files_error_path = "uploaded"
+files_error_path = "error"
 
 def listdirs(folder):
     return [d for d in os.listdir(folder) if os.path.isdir(os.path.join(folder, d))]
@@ -28,12 +29,13 @@ if __name__ == "__main__":
     print "starting upload process"
     for file in os.listdir(files_to_process_path):
       if file.endswith(".json"):
-        with open(files_to_process_path + "/" + dir + "/"+file) as json_file:
+        with open(files_to_process_path + "/" +file) as json_file:
+          print "processing " + files_to_process_path + "/" +file
           try:
             json_data = json.load(json_file)
           except:
+            print "error parsing json"
             continue
-
           try:
             opener = poster.streaminghttp.register_openers()
             opener.add_handler(urllib2.HTTPCookieProcessor(cookielib.CookieJar())) # Add cookie handler
@@ -46,9 +48,11 @@ if __name__ == "__main__":
             datagen, headers = poster.encode.multipart_encode(params)
             request = urllib2.Request(upload_url, datagen, headers)
             result = urllib2.urlopen(request).read()
-            print result + " id file " + json_data["id"] + files_to_process_path + "/" + dir + "/"+file
-            shutil.move(files_to_process_path + "/" + dir + "/"+file, files_processed_path + "/" + "/"+file)
+            print result + " id file " + json_data["id"] + files_to_process_path + "/" + file
+            shutil.move(files_to_process_path + "/" +file, files_processed_path + "/" + file)
           except:
-            shutil.move(files_to_process_path + "/" + dir + "/"+file, files_error_path + "/" + "/"+file)
+            print "error sending file data"
+            shutil.move(files_to_process_path + "/" +file, files_error_path + "/" + file)
             continue
+            #raise
 
