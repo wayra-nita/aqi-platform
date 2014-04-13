@@ -14,35 +14,41 @@ import glob
 import os
 import json
 from pprint import pprint
+import shutil
 
-upload_url = "http://aqi.local/image"
+upload_url = "http://aqi.local/resource/"
 files_to_process_path = "metadata"
 files_processed_path = "uploaded"
+files_error_path = "uploaded"
 
 def listdirs(folder):
     return [d for d in os.listdir(folder) if os.path.isdir(os.path.join(folder, d))]
 
 if __name__ == "__main__":
     print "starting upload process"
-    for dir in listdirs(files_to_process_path):
-      for file in os.listdir(files_to_process_path + "/" + dir):
-        if file.endswith(".json"):
-          with open(files_to_process_path + "/" + dir + "/"+file) as json_file:
-            try:
-              json_data = json.load(json_file)
-            except:
-              continue
-            
+    for file in os.listdir(files_to_process_path):
+      if file.endswith(".json"):
+        with open(files_to_process_path + "/" + dir + "/"+file) as json_file:
+          try:
+            json_data = json.load(json_file)
+          except:
+            continue
+
+          try:
             opener = poster.streaminghttp.register_openers()
             opener.add_handler(urllib2.HTTPCookieProcessor(cookielib.CookieJar())) # Add cookie handler
             params = {
-              'id': str(json_data["id"]), 
-              'title': str(json_data["title"]), 
+              'id': json_data["id"], 
+              'title': json_data["title"], 
               'lat': str(json_data["lat"]), 
               'long': str(json_data["long"]), 
               'imgloc': str(json_data["imgloc"])}
             datagen, headers = poster.encode.multipart_encode(params)
             request = urllib2.Request(upload_url, datagen, headers)
-            result = urllib2.urlopen(request)
-            print result
-            exit(0)
+            result = urllib2.urlopen(request).read()
+            print result + " id file " + json_data["id"] + files_to_process_path + "/" + dir + "/"+file
+            shutil.move(files_to_process_path + "/" + dir + "/"+file, files_processed_path + "/" + "/"+file)
+          except:
+            shutil.move(files_to_process_path + "/" + dir + "/"+file, files_error_path + "/" + "/"+file)
+            continue
+

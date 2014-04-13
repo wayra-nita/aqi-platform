@@ -29,8 +29,8 @@ def mkdir_p(path):
 api_key = "da3cea7cccd3240398c6af0630474dd7"
 flickr = flickrapi.FlickrAPI(api_key, cache=True)
 
-cities = ["Des Moines,United States","Nipomo,United States","Las Vegas,United States","Paso Robles,United States","Atascadero,United States","San Luis Obispo,United States","Carrizo Plains,United States","Morro Bay,United States","Red Hills,United States","El Paso,United States","Springfield,United States","Laredo,United States","Austin,United States","Beaumont-Port Arthur,United States","Houston-Galveston-Brazoria,United States","Oxnard,United States","Waco-Killeen,United States","Phoenix,United States","Tyler-Longview-Marshall,United States","Columbus,United States","Brownsville-McAllen,United States","Dallas-Fort Worth,United States","San Antonio,United States","Youngstown,United States","Simi Valley,United States","Lake Elsinore,United States","Louisville,United States","Central LA CO,United States","Grand Junction,United States","Norco/Corona,United States"]
-limit = 1000
+cities = ["Des Moines,United States","Nipomo,United States","Las Vegas,United States","Paso Robles,United States","Atascadero,United States","San Luis Obispo,United States","Morro Bay,United States","Red Hills,United States","El Paso,United States","Springfield,United States","Laredo,United States","Austin,United States","Beaumont-Port Arthur,United States","Houston-Galveston-Brazoria,United States","Oxnard,United States","Waco-Killeen,United States","Phoenix,United States","Tyler-Longview-Marshall,United States","Columbus,United States","Brownsville-McAllen,United States","Dallas-Fort Worth,United States","San Antonio,United States","Youngstown,United States","Simi Valley,United States","Lake Elsinore,United States","Louisville,United States","Central LA CO,United States","Grand Junction,United States","Norco/Corona,United States"]
+limit = 30
 for city in cities:
   sum = 0
   results = Geocoder.geocode(city)
@@ -38,18 +38,20 @@ for city in cities:
   r_long = str(results[0].coordinates[1])
   name_city = slugify(str(results[0]))
   print  "retrieving data for city " + name_city + " lat " + r_lat + " long " + r_long 
-  base_meta_dir = "metadata/"+name_city+"/"
-  base_img_dir = "photos/"+name_city+"/"
+  base_meta_dir = "metadata/"
+  base_img_dir = "photos/"
   mkdir_p(base_meta_dir)
   mkdir_p(base_img_dir)
   
-  for index in range(1,10):
+  for index in range(1,3):
     if sum >= limit:
       break
       
     photos = flickr.photos_search(tags='cielo, sky, paisaje, landscape', has_geo=1, page=index, per_page= 100, lat=r_lat, lon=r_long, radius='20')  
     for photo in photos[0]:
       sum = sum + 1
+      if sum > limit:
+        break
       if os.path.isfile(base_meta_dir+photo.attrib['id']+'.json'):
         continue
 
