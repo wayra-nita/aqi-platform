@@ -37,7 +37,7 @@ class ObservationRepository extends EntityRepository
       ->setParameter('lat2', $lat2)
       ->setParameter('lon1', $lon1)
       ->setParameter('lon2', $lon2);
-    return $query->getQuery()->setHydrationMode(\Doctrine\ORM\AbstractQuery::HYDRATE_SCALAR)->execute();
+    return $query->getQuery()->setHydrationMode(\Doctrine\ORM\AbstractQuery::HYDRATE_SINGLE_SCALAR)->execute();
   }
 
   public function getByQuadrant($lat1, $lon1, $lat2, $lon2)
@@ -53,6 +53,6 @@ class ObservationRepository extends EntityRepository
       ->setParameter('lat2', $lat2)
       ->setParameter('lon1', $lon1)
       ->setParameter('lon2', $lon2);
-    return $query->getQuery()->setHydrationMode(\Doctrine\ORM\AbstractQuery::HYDRATE_SCALAR)->execute();
+    return $query->getQuery()->setHydrationMode(\Doctrine\ORM\AbstractQuery::HYDRATE_SINGLE_SCALAR)->execute();
   }
 }

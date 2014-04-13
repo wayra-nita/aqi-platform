@@ -25,7 +25,8 @@ class GridController extends FOSRestController {
     }
     
     private function fillColors($squares) {
-        // get the visualization here $visualization = 
+        $em = $this->getDoctrine()->getEntityManager();
+        $visualization = $this->container->get('consumer.visualization');
         foreach ($squares as &$square) {
             $count = $visualization->getCountInQuadrant($square['ne']['lt'], $square['ne']['lg'], $square['sw']['lt'], $square['sw']['lg']);
             if (!$count) {
@@ -35,7 +36,7 @@ class GridController extends FOSRestController {
             }
             //$average = $visualization->getAverageByQuadrant(60,147,63,149);
             $average = $visualization->getAverageByQuadrant($square['ne']['lt'], $square['ne']['lg'], $square['sw']['lt'], $square['sw']['lg']);
-            $airQualityCategory = $this->em->getRepository('YaCoreModelBundle:AirQualityCategory')->getByAqiValue($average);
+            $airQualityCategory = $em->getRepository('YaCoreModelBundle:AirQualityCategory')->getByAqiValue($average);
             $square['color'] = $airQualityCategory->getColorCode();
             $square['name']  = $airQualityCategory->getName();
         }
