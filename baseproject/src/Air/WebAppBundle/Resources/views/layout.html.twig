@@ -3,5 +3,15 @@
 {% block stylesheets %}
     {{ parent() }}
 
-    <link rel="stylesheet" href="{{ asset('bundles/yadatacollector/css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/airwebapp/css/main.css') }}">
+{% endblock %}
+    
+{% block body %}
+
+    {{ parent() }}
+    
+    <div id="main_container">
+        {% block main_container %}{% endblock %}
+    </div>
+    
 {% endblock %}
