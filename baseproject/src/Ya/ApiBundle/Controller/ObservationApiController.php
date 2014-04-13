@@ -18,7 +18,7 @@ class ObservationApiController extends FOSRestController {
     public function getObservationAction()
     {
       $consumer = $this->container->get('consumer.visualization');
-      $observations = $consumer->getAverageByCountry();
+      $observations = $consumer->getAverageByQuadrant();
       echo json_encode($observations);
       exit;
     }

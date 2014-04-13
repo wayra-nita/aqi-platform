@@ -1,9 +1,4 @@
-ya_api_observation_get:
-    pattern:  /api/observation
-    defaults: { _controller: YaApiBundle:ObservationApi:getObservation }
-    methods:  [GET]
-    
-ya_api_observation_post:
-    pattern:  /api/observation
-    defaults: { _controller: YaApiBundle:ObservationApi:postObservation }
-    methods:  [POST]
+ya_api_annotation:
+    resource: "@YaApiBundle/Controller/"
+    type:     annotation
+    prefix:   /
