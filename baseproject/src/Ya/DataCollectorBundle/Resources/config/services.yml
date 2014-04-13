@@ -1,9 +1,10 @@
 parameters:
     collector.airnow.class: Ya\DataCollectorBundle\Services\AirNowService
+    collector.fake.class: Ya\DataCollectorBundle\Services\FakeService
  
 services:
-    collector.airnow:
-        class: "%collector.airnow.class%"
+    collector.fake:
+        class: "%collector.fake.class%"
         arguments:
           em: @doctrine.orm.entity_manager
           kernel: @kernel

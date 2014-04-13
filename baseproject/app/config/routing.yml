@@ -15,7 +15,7 @@ air_web_app:
 #ya_data_collector:
 #    resource: "@YaDataCollectorBundle/Controller/"
 #    type:     annotation
-#    prefix:   /collector
+#    prefix:ctor
 
 ya_core_model:
     resource: "@YaCoreModelBundle/Resources/config/routing.yml"
@@ -59,4 +59,9 @@ resource_loc:
 api_location:
   resource: Ya\CoreModelBundle\Controller\DefaultController
   prefix: /data
+  type: annotation
+
+fake_location:
+  resource: Ya\DataCollectorBundle\Controller\DefaultController
+  prefix: /collect
   type: annotation
