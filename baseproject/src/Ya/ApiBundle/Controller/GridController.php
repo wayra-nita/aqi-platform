@@ -25,7 +25,7 @@ class GridController extends FOSRestController {
     }
     
     private function fillColors($squares) {
-        $visualization = new VisualizationService();
+        // get the visualization here $visualization = 
         foreach ($squares as &$square) {
             $count = $visualization->getCountInQuadrant($square['ne']['lt'], $square['ne']['lg'], $square['sw']['lt'], $square['sw']['lg']);
             if (!$count) {
