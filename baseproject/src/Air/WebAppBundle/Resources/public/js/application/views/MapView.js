@@ -9,7 +9,12 @@ var MapView = Backbone.View.extend({
     },
     
     renderMap: function (){
-        this.mapModel.triggerMap();            
+        var self = this;
+        this.mapModel.triggerMap();
+        setTimeout(function (){
+            self.mapModel.makeCoordinatesRequest();
+        }, 3000);
+        
     }
 });
 

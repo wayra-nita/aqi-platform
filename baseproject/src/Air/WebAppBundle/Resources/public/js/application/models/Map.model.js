@@ -2,9 +2,9 @@ var MapModel = Backbone.Model.extend({
     defaults: {
         gMap: null,
         id_container: '',
-        latitude: 24.886436490787712,
-        longitude: -70.2685546875,
-        zoom: 6,
+        latitude: 41.850033,
+        longitude: -87.6500523,
+        zoom: 4,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         polygonShapes: []
     },
@@ -153,7 +153,7 @@ var MapModel = Backbone.Model.extend({
             var bounds = self.getGMap().getBounds();
             var ne = bounds.getNorthEast(); // LatLng of the north-east corner
             var sw = bounds.getSouthWest(); // LatLng of the south-west corder            
-            
+
             $.ajax({
                 url: Routing.generate('api_get_grid_data'),
                 type: 'POST',
@@ -167,11 +167,33 @@ var MapModel = Backbone.Model.extend({
                 success: function (grid){
                     self.drawPolygon(grid);
                 }
-            });            
+            });
         });
     },
     
     getGMap: function (){
         return this.get('gMap');
+    },
+    
+    makeCoordinatesRequest: function (){
+        var self = this;
+        var bounds = self.get('gMap').getBounds();
+        var ne = bounds.getNorthEast(); // LatLng of the north-east corner
+        var sw = bounds.getSouthWest(); // LatLng of the south-west corder            
+
+        $.ajax({
+            url: Routing.generate('api_get_grid_data'),
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                neLat: ne.lat(),
+                neLng: ne.lng(),
+                swLat: sw.lat(),
+                swLng: sw.lng()
+            },
+            success: function (grid){
+                self.drawPolygon(grid);
+            }
+        });
     }
 });
