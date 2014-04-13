@@ -19,6 +19,7 @@ class ObservationApiController extends FOSRestController {
     {
       $consumer = $this->container->get('consumer.visualization');
       $observations = $consumer->getAverageByQuadrant();
+      var_dump(count($observations)); exit;
       echo json_encode($observations);
       exit;
     }

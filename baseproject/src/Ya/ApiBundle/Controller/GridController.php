@@ -7,18 +7,54 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\FOSRestController;
+use Ya\DataConsumerBundle\Services\VisualizationService;
+use Ya\CoreModelBundle\Entity\AirQualityCategory;
 
 
 class GridController extends FOSRestController {
     private static $horizontalSegments = 5;
     private static $verticalSegments   = 4;
     /**
-     * @Method("GET")
-     * @Route("/api/get_grid/{neLat}/{neLng}/{swLat}/{swLng}", name = "api_get_grid_data")
+     * @Method("POST")
+     * @Route("/api/get_grid", name = "api_get_grid_data", options = {"expose"=true})
      */
-    public function getGridAction(Request $request, $neLat, $neLng, $swLat, $swLng) {
+    public function getGridAction(Request $request) {
+        $neLat = $request->get('neLat');
+        $neLng = $request->get('neLng');
+        $swLat = $request->get('swLat');
+        $swLng = $request->get('swLng');
         $squares = $this->getSquares($neLat, $neLng, $swLat, $swLng);
+        $squares = $this->fillColors($squares);
         return new Response($this->get('serializer')->serialize($squares, "json"));
+    }
+    
+    private function fillColors($squares) {
+        $em = $this->getDoctrine()->getEntityManager();
+        $visualization = $this->container->get('consumer.visualization');
+        foreach ($squares as &$square) {
+            $count = $visualization->getCountInQuadrant($square['ne']['lt'], $square['ne']['lg'], $square['sw']['lt'], $square['sw']['lg']);
+            if (!$count) {
+                $square['color'] = '#FFFFFF';
+                $square['name']  = 'Not enough data';
+                continue;
+            }
+            //$average = $visualization->getAverageByQuadrant(60,147,63,149);
+            $average = $visualization->getAverageByQuadrant($square['ne']['lt'], $square['ne']['lg'], $square['sw']['lt'], $square['sw']['lg']);
+            $airQualityCategory = $em->getRepository('YaCoreModelBundle:AirQualityCategory')->getByAqiValue((int)round($average));
+            $airQualityCategory = $airQualityCategory[0];
+            $square['color'] = $this->convertRgbToHex($airQualityCategory->getColorCode());
+            $square['name']  = $airQualityCategory->getName();
+        }
+        return $squares;
+    }
+    
+    private function convertRgbToHex($rgb) {
+        $rgb = explode(',', $rgb);
+        $hex = "#";
+        $hex .= str_pad(dechex($rgb[0]), 2, "0", STR_PAD_LEFT);
+        $hex .= str_pad(dechex($rgb[1]), 2, "0", STR_PAD_LEFT);
+        $hex .= str_pad(dechex($rgb[2]), 2, "0", STR_PAD_LEFT);
+        return $hex;
     }
     
     private function getSquares($neLat, $neLng, $swLat, $swLng) {
