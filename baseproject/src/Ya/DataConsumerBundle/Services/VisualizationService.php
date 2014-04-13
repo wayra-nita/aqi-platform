@@ -17,11 +17,17 @@ use Ya\CoreModelBundle\Entity\SequenceEnum as SequenceEnum;
 
 class VisualizationService extends AbstractConsumerService
 {
-  public function getAverageByCountry()
+  public function getAverageByQuadrant()
   {
-    $observations = $this->em->getRepository('YaCoreModelBundle:Observation')->getById(12670);
+    $lat1 = 60;
+    $lon1 = 147;
+    $lat2 = 63;
+    $lon2 = 149;
+    $observations = $this->em->getRepository('YaCoreModelBundle:Observation')->getByQuadrant(
+      $lat1, $lon1, $lat2, $lon2);
     return $observations;
   }
+
   protected function initialize()
   {
 
