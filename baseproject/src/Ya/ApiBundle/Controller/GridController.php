@@ -12,8 +12,8 @@ use Ya\CoreModelBundle\Entity\AirQualityCategory;
 
 
 class GridController extends FOSRestController {
-    private static $horizontalSegments = 5;
-    private static $verticalSegments   = 4;
+    private static $horizontalSegments = 3;
+    private static $verticalSegments   = 3;
     /**
      * @Method("POST")
      * @Route("/api/get_grid", name = "api_get_grid_data", options = {"expose"=true})
@@ -25,6 +25,7 @@ class GridController extends FOSRestController {
         $swLng = $request->get('swLng');
         $squares = $this->getSquares($neLat, $neLng, $swLat, $swLng);
         $squares = $this->fillColors($squares);
+        print_r($squares); exit;
         return new Response($this->get('serializer')->serialize($squares, "json"));
     }
     
@@ -32,15 +33,20 @@ class GridController extends FOSRestController {
         $em = $this->getDoctrine()->getEntityManager();
         $visualization = $this->container->get('consumer.visualization');
         foreach ($squares as &$square) {
-            $square = $square['coord'];
-            $count = $visualization->getCountInQuadrant($square['ne']['lt'], $square['ne']['lg'], $square['sw']['lt'], $square['sw']['lg']);
+            $count = $visualization->getCountInQuadrant($square['coord']['ne']['lt'],
+              $square['coord']['ne']['lg'],
+              $square['coord']['sw']['lt'],
+              $square['coord']['sw']['lg']);
             if (!$count) {
                 $square['color'] = '#FFFFFF';
                 $square['name']  = 'Not enough data';
                 continue;
             }
             //$average = $visualization->getAverageByQuadrant(32.9, -112.072, 43.1105, -110.972);
-            $average = $visualization->getAverageByQuadrant($square['ne']['lt'], $square['ne']['lg'], $square['sw']['lt'], $square['sw']['lg']);
+            $average = $visualization->getAverageByQuadrant($square['coord']['ne']['lt'],
+              $square['coord']['ne']['lg'],
+              $square['coord']['sw']['lt'],
+              $square['coord']['sw']['lg']);
             $average = (int)round($average);
             $airQualityCategory = $em->getRepository('YaCoreModelBundle:AirQualityCategory')->getByAqiValue($average);
             $airQualityCategory = $airQualityCategory[0];
