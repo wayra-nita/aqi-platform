@@ -10,5 +10,5 @@ namespace Ya\DataCollectorBundle\Interfaces;
 
 interface IDataCollector
 {
-  public function collectData();
+
 } 

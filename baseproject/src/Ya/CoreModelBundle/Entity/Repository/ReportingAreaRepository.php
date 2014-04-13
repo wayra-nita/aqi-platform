@@ -16,7 +16,7 @@ class ReportingAreaRepository extends EntityRepository
   public function getOrCreateReportingArea($countryCode, $regionCode, $cityName, $latitude, $longitude)
   {
     $em = $this->getEntityManager();
-    $country = $em->getRepository('YaCoreModelBundle:Country')->findOneBy(array('fips104' => $countryCode));
+    $country = $em->getRepository('YaCoreModelBundle:Country')->findOneBy(array('iso2' => $countryCode));
     $region = $em->getRepository('YaCoreModelBundle:Region')->
       getOrCreateRegionByCountry($country, $regionCode);
     $city = $em->getRepository('YaCoreModelBundle:City')->

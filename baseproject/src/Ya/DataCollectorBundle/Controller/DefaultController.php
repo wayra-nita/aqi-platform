@@ -10,14 +10,27 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/res/{name}")
+     * @Route("/airdata")
      * @Method("GET")
      * @Template()
+     * TODO: Move this to a console application and execute it as cron
      */
-    public function indexAction($name)
+    public function indexAction()
     {
       $collector = $this->container->get('collector.airnow');
       $collector->collectData();
-      die('bla');
+      die('Airdata parsed successfully');
     }
+
+  /**
+   * @Route("/fake/{country}")
+   * @Method("GET")
+   * @Template()
+   */
+  public function fakeAction($country)
+  {
+    $collector = $this->container->get('collector.fake');
+    $collector->collectData($country);
+    die('Fake data generated for ' . $country);
+  }
 }
