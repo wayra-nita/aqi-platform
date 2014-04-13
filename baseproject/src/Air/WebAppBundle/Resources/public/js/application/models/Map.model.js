@@ -118,7 +118,7 @@ var MapModel = Backbone.Model.extend({
             paths.push(p4);
             paths.push(p1);
             
-            var color = coords[i].color;
+            var color = "#ff0000";
             var shape = new google.maps.Polygon({
                 paths: paths,
                 strokeColor: color,
@@ -152,7 +152,7 @@ var MapModel = Backbone.Model.extend({
             
             $.ajax({
                 url: Routing.generate('api_get_grid_data'),
-                type: 'GET',
+                type: 'POST',
                 dataType: 'json',
                 data: {
                     neLat: ne.lat(),
@@ -161,11 +161,11 @@ var MapModel = Backbone.Model.extend({
                     swLng: sw.lng()
                 },
                 success: function (grid){
-                    console.log(grid);
+                    self.drawPolygon(grid);
                 }
             });
             
-            self.drawPolygon(coords);            
+                        
         });
     },
     

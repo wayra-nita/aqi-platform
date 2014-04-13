@@ -7,7 +7,7 @@
         <title>{% block title %}Wayra-nita{% endblock %}</title>
         {% block stylesheets %}
 
-        <link rel="stylesheet" href="{{ asset('bundles/airwebapp/css/bootstrap/bootstrap.css') }}">
+{#        <link rel="stylesheet" href="{{ asset('bundles/airwebapp/css/bootstrap/bootstrap.css') }}">#}
         <link rel="stylesheet" href="{{ asset('bundles/airwebapp/css/bootstrap/bootstrap-w.css') }}">
 
             {# Bootstrap fonts #}
@@ -28,17 +28,29 @@
     </head>
     <body>
         {% block body %}{% endblock %}
-        {% block javascripts %}            
+        {% block javascripts %}    
+            <script type="text/javascript"
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDk9eKiJYjvaoDa2g--L4aJvGmqNDrwa8o&sensor=true">
+            </script>
             {% javascripts 
                    '@AirWebAppBundle/Resources/public/js/jquery/*'
                    '@AirWebAppBundle/Resources/public/js/bootstrap/*'                   
-                   '@AirWebAppBundle/Resources/public/js/backbonejs/*'                   
+                   '@AirWebAppBundle/Resources/public/js/backbonejs/underscore1.6.0.min.js'                   
+                   '@AirWebAppBundle/Resources/public/js/backbonejs/backbone.min.js'                   
+                   '@AirWebAppBundle/Resources/public/js/application/models/*'                   
+                   '@AirWebAppBundle/Resources/public/js/application/views/*'                   
+                   '@AirWebAppBundle/Resources/public/js/application/main_app.js'                                     
             %}
                 <script type="text/javascript" src="{{ asset_url }}"></script>
             {% endjavascripts %}
-                <script type="text/javascript"
-                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDk9eKiJYjvaoDa2g--L4aJvGmqNDrwa8o&sensor=true">
-                </script>
+            {% javascripts '@AirWebAppBundle/Resources/public/js/backbonejs/underscore-min.map' output='js/underscore-min.map' %}
+                <script src="{{ asset_url }}"></script>
+            {% endjavascripts %}                
+            {% javascripts '@AirWebAppBundle/Resources/public/js/backbonejs/backbone-min.map' output='js/backbone-min.map' %}
+                <script src="{{ asset_url }}"></script>
+            {% endjavascripts %}      
+            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
         {% endblock %}
     </body>
 </html>

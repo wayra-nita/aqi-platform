@@ -13,10 +13,14 @@ class GridController extends FOSRestController {
     private static $horizontalSegments = 5;
     private static $verticalSegments   = 4;
     /**
-     * @Method("GET")
-     * @Route("/api/get_grid/{neLat}/{neLng}/{swLat}/{swLng}", name = "api_get_grid_data")
+     * @Method("POST")
+     * @Route("/api/get_grid", name = "api_get_grid_data", options = {"expose"=true})
      */
-    public function getGridAction(Request $request, $neLat, $neLng, $swLat, $swLng) {
+    public function getGridAction(Request $request) {
+        $neLat = $request->get('neLat');
+        $neLng = $request->get('neLng');
+        $swLat = $request->get('swLat');
+        $swLng = $request->get('swLng');
         $squares = $this->getSquares($neLat, $neLng, $swLat, $swLng);
         return new Response($this->get('serializer')->serialize($squares, "json"));
     }
