@@ -23,12 +23,12 @@ class ObservationRepository extends EntityRepository
       ->setParameter('id', $id);
     return $query->getQuery()->setHydrationMode(\Doctrine\ORM\AbstractQuery::HYDRATE_ARRAY)->execute();
   }
-
-  public function getByQuadrant($lat1, $lon1, $lat2, $lon2)
+  
+  public function getCountInQuadrant($lat1, $lon1, $lat2, $lon2)
   {
     $em = $this->getEntityManager();
     $query = $em->createQueryBuilder()
-      ->select('o.aqiValue, ra.latitude, ra.longitude')
+      ->select('COUNT(o.aqiValue)')
       ->from('Ya\CoreModelBundle\Entity\Observation', 'o')
       ->leftJoin('Ya\CoreModelBundle\Entity\ReportingArea', 'ra')
       ->where('ra.latitude >= :lat1 AND ra.latitude <= :lat2')
@@ -37,7 +37,22 @@ class ObservationRepository extends EntityRepository
       ->setParameter('lat2', $lat2)
       ->setParameter('lon1', $lon1)
       ->setParameter('lon2', $lon2);
-    echo $query->getQuery()->getSQL();
-    return $query->getQuery()->setHydrationMode(\Doctrine\ORM\AbstractQuery::HYDRATE_ARRAY)->execute();
+    return $query->getQuery()->setHydrationMode(\Doctrine\ORM\AbstractQuery::HYDRATE_SCALAR)->execute();
+  }
+
+  public function getByQuadrant($lat1, $lon1, $lat2, $lon2)
+  {
+    $em = $this->getEntityManager();
+    $query = $em->createQueryBuilder()
+      ->select('AVG(o.aqiValue)')
+      ->from('Ya\CoreModelBundle\Entity\Observation', 'o')
+      ->leftJoin('Ya\CoreModelBundle\Entity\ReportingArea', 'ra')
+      ->where('ra.latitude >= :lat1 AND ra.latitude <= :lat2')
+      ->andWhere('ra.longitude >= :lon1 AND ra.longitude <= :lon2')
+      ->setParameter('lat1', $lat1)
+      ->setParameter('lat2', $lat2)
+      ->setParameter('lon1', $lon1)
+      ->setParameter('lon2', $lon2);
+    return $query->getQuery()->setHydrationMode(\Doctrine\ORM\AbstractQuery::HYDRATE_SCALAR)->execute();
   }
 }
