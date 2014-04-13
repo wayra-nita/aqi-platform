@@ -42,7 +42,7 @@ class GridController extends FOSRestController {
                 $square['average'] = 0;
                 continue;
             }
-            //$average = $visualization->getAverageByQuadrant(32.9, -112.072, 43.1105, -110.972);
+            //$average = $visualization->getAverageByQuadrant(32.8982916, -118.5565222, 33.8982916, -117.5565222);
             $average = $visualization->getAverageByQuadrant($square['coord']['ne']['lt'],
               $square['coord']['ne']['lg'],
               $square['coord']['sw']['lt'],
@@ -53,6 +53,10 @@ class GridController extends FOSRestController {
             $square['color'] = $this->convertRgbToHex($airQualityCategory->getColorCode());
             $square['name']  = $airQualityCategory->getName();
             $square['average'] = $average;
+            $square['resources'] = $visualization->getResourcesByQuadrant($square['coord']['ne']['lt'],
+              $square['coord']['ne']['lg'],
+              $square['coord']['sw']['lt'],
+              $square['coord']['sw']['lg']);
         }
         return $squares;
     }

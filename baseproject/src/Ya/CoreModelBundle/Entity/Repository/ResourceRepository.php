@@ -12,4 +12,12 @@ use Doctrine\ORM\EntityRepository;
  */
 class ResourceRepository extends EntityRepository
 {
+  public function getByQuadrant($lat1, $lon1, $lat2, $lon2)
+  {
+    $sql = "SELECT r.name, r.path FROM resource r
+WHERE (r.latitude >= :lat1 AND r.latitude <= :lat2) AND (r.longitude >= :lon1 AND r.longitude <= :lon2)";
+    $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+    $stmt->execute(array('lat1' => $lat1, 'lat2' => $lat2, 'lon1' => $lon1, 'lon2' => $lon2));
+    return $stmt->fetchAll();
+  }
 }

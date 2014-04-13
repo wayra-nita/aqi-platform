@@ -29,6 +29,11 @@ class VisualizationService extends AbstractConsumerService {
                 $neLat, $neLng, $swLat, $swLng);
         return $average;
     }
+
+    public function getResourcesByQuadrant($neLat, $neLng, $swLat, $swLng) {
+      return $this->em->getRepository('YaCoreModelBundle:Resource')->getByQuadrant(
+        $neLat, $neLng, $swLat, $swLng);
+    }
     
     public function initialize() {
         
