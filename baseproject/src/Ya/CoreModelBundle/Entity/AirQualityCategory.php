@@ -41,6 +41,20 @@ class AirQualityCategory
   protected $colorCode;
 
   /**
+   * @var integer
+   *
+   * @ORM\Column(name="min", type="integer")
+   */
+  protected $min;
+
+  /**
+   * @var integer
+   *
+   * @ORM\Column(name="max", type="integer")
+   */
+  protected $max;
+
+  /**
    * @var ArrayCollection
    * @ORM\OneToMany(targetEntity="Observation", mappedBy="airQualityCategory")
    */
@@ -142,4 +156,50 @@ class AirQualityCategory
   {
     return $this->observations;
   }
+
+    /**
+     * Set min
+     *
+     * @param integer $min
+     * @return AirQualityCategory
+     */
+    public function setMin($min)
+    {
+        $this->min = $min;
+    
+        return $this;
+    }
+
+    /**
+     * Get min
+     *
+     * @return integer 
+     */
+    public function getMin()
+    {
+        return $this->min;
+    }
+
+    /**
+     * Set max
+     *
+     * @param integer $max
+     * @return AirQualityCategory
+     */
+    public function setMax($max)
+    {
+        $this->max = $max;
+    
+        return $this;
+    }
+
+    /**
+     * Get max
+     *
+     * @return integer 
+     */
+    public function getMax()
+    {
+        return $this->max;
+    }
 }

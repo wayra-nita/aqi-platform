@@ -12,5 +12,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class AirQualityCategoryRepository extends EntityRepository
 {
-
+  public function getByAqiValue($aqiValue)
+  {
+    $em = $this->getEntityManager();
+    $query = $em->createQueryBuilder()
+      ->select('aqc')
+      ->from('Ya\CoreModelBundle\Entity\AirQualityCategory', 'aqc')
+      ->where('aqc.min <= :aqiValue')
+      ->andWhere('aqc.max >= :aqiValue')
+      ->setParameter('aqiValue', $aqiValue);
+    return $query->getQuery()->execute();
+  }
 }

@@ -13,9 +13,10 @@ class ObservationApiController extends FOSRestController {
 
     /**
      * @Method("GET")
-     * @Route("/api/observation/", name = "api_get_observation")
+     * @Route("/api/observation", name = "api_get_observation")
      */
     public function getObservationAction() {
+      die('123');
         $em = $this->getDoctrine()->getManager();
         $observations = $em->getRepository('YaCoreModelBundle:Observation')
                 ->findAll();
@@ -45,7 +46,7 @@ class ObservationApiController extends FOSRestController {
         $observation = $this->setIfAvailable($observation, $observationData, 'time_zone');
         $observation = $this->setFromRepositoryById($observation, $observationData, 'sequence_id', 'SequenceEnum', 'setSequence');
         $observation = $this->setFromRepositoryById($observation, $observationData, 'data_type_id', 'DataTypeEnum', 'setDataType');
-<<<<<<< HEAD:baseproject/src/Ya/ApiBundle/Controller/ObservationApiController.php
+
         $observation = $this->setIfAvailable($observation, $observationData, 'valid_date');
         if (isset($observationData['air_quality'])) {
             $airQualityCategory = $em->getRepository('YaCoreModelBundle:AirQualityCategory')->getByAqiValue($observationData['air_quality']);
@@ -68,8 +69,6 @@ class ObservationApiController extends FOSRestController {
         $observation = $this->setIfAvailable($observation, $observationData, 'is_action_day', 0);
         $observation = $this->setIfAvailable($observation, $observationData, 'discussion');
         $observation = $this->setIfAvailable($observation, $observationData, 'forecast_source');
-=======
->>>>>>> parent of 3367d3d... merging code:src/Ya/ApiBundle/Controller/ObservationApiController.php
 
         $em->persist($observation);
         $em->flush();
