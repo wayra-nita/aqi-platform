@@ -105,6 +105,7 @@ var MapModel = Backbone.Model.extend({
             var color = coords[i].color;
 
             var name = coords[i].name;
+            var average = coords[i].average;
             if (color !== "#FFFFFF")
             {
                 var nwLt = parseFloat(coords[i].coord.nw.lt);
@@ -120,7 +121,7 @@ var MapModel = Backbone.Model.extend({
                 var p3 = new google.maps.LatLng(neLt, neLg);
                 var p2 = new google.maps.LatLng(seLt, seLg);
                 var p1 = new google.maps.LatLng(swLt, swLg); 
-
+                
                 paths.push(p1);
                 paths.push(p2);
                 paths.push(p3);
@@ -147,7 +148,7 @@ var MapModel = Backbone.Model.extend({
 
     triggerZoomListener: function (){
         var self = this;
-        google.maps.event.addListener(this.getGMap(), 'idle', function(ev){
+        google.maps.event.addListener(this.getGMap(), 'zoom_changed', function(ev){
             self.triggerMap();
             var bounds = self.getGMap().getBounds();
             var ne = bounds.getNorthEast(); // LatLng of the north-east corner
@@ -164,7 +165,6 @@ var MapModel = Backbone.Model.extend({
                     swLng: sw.lng()
                 },
                 success: function (grid){
-                    console.log(grid)
                     self.drawPolygon(grid);
                 }
             });            
