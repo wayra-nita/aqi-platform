@@ -84,6 +84,13 @@ var MapModel = Backbone.Model.extend({
         }
     },
     
+    /**
+     * Draws a series of Rectangles based on the
+     * given coords.
+     * 
+     * @param {Array} coords A set of coordinates in which every row represents
+     * 4 point to draw a rectangle area with a selected color
+     */
     drawPolygon: function (coords){
         var paths = [];
         for (var i in coords)
@@ -110,18 +117,19 @@ var MapModel = Backbone.Model.extend({
             paths.push(p4);
             paths.push(p4);
             paths.push(p1);
-        }
+            
+            var color = coords[i].color;
+            var shape = new google.maps.Polygon({
+                paths: paths,
+                strokeColor: color,
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: color,
+                fillOpacity: 0.35
+            });
 
-        var shape = new google.maps.Polygon({
-          paths: paths,
-          strokeColor: '#ff0000',
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: '#ff0000',
-          fillOpacity: 0.35
-        });
-
-        shape.setMap(this.getGMap());
+            shape.setMap(this.getGMap());
+        }                
     },
 
     triggerZoomListener: function (){
@@ -141,6 +149,21 @@ var MapModel = Backbone.Model.extend({
                  color: '#ff0000', 
                  name: 'Good'}                
             ];
+            
+            $.ajax({
+                url: Routing.generate('api_get_grid_data'),
+                type: 'GET',
+                dataType: 'json',
+                data: {
+                    neLat: ne.lat(),
+                    neLng: ne.lng(),
+                    swLat: sw.lat(),
+                    swLng: sw.lng()
+                },
+                success: function (grid){
+                    console.log(grid);
+                }
+            });
             
             self.drawPolygon(coords);            
         });
