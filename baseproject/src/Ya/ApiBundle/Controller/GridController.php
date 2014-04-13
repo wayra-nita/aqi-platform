@@ -40,8 +40,9 @@ class GridController extends FOSRestController {
             }
             //$average = $visualization->getAverageByQuadrant(60,147,63,149);
             $average = $visualization->getAverageByQuadrant($square['ne']['lt'], $square['ne']['lg'], $square['sw']['lt'], $square['sw']['lg']);
-            $airQualityCategory = $em->getRepository('YaCoreModelBundle:AirQualityCategory')->getByAqiValue((int)round($average));
-            $airQualityCategory = $airQualityCategory[0];
+            $average = (int)round($average);
+            $airQualityCategory = $em->getRepository('YaCoreModelBundle:AirQualityCategory')->getByAqiValue($average);
+            //$airQualityCategory = $airQualityCategory[0];
             $square['color'] = $this->convertRgbToHex($airQualityCategory->getColorCode());
             $square['name']  = $airQualityCategory->getName();
         }
