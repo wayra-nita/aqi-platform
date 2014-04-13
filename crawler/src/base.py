@@ -46,7 +46,7 @@ for city in cities:
     photos = flickr.photos_search(tags='cielo, sky, paisaje, landscape', has_geo=1, page=index, per_page= 100, lat=r_lat, lon=r_long, radius='20')  
     for photo in photos[0]:
 
-      if os.path.isfile(base_img_dir+photo.attrib['id']+'.jpg'):
+      if os.path.isfile(base_meta_dir+photo.attrib['id']+'.json'):
         continue
 
       print("downloading file "+photo.attrib['id'] + " to dir " + name_city)
@@ -75,6 +75,6 @@ for city in cities:
       with open(base_meta_dir+photo.attrib['id']+'.json', 'w') as outfile:
         json.dump(data_json, outfile)
         
-      urllib.urlretrieve(imgloc, base_img_dir+photo.attrib['id']+'.jpg')
+      #urllib.urlretrieve(imgloc, base_img_dir+photo.attrib['id']+'.jpg')
         
 #  exit(0)
