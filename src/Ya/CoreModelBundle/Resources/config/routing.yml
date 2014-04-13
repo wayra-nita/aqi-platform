@@ -1,3 +1,0 @@
-ya_core_model_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: YaCoreModelBundle:Default:index }
