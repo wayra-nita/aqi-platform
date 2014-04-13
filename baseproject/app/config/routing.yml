@@ -1,3 +1,13 @@
+ya_data_consumer:
+    resource: "@YaDataConsumerBundle/Controller/"
+    type:     annotation
+    prefix:   /consumer
+
+ya_api:
+    resource: "@YaApiBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 air_web_app:
     resource: "@AirWebAppBundle/Resources/config/routing.yml"
     prefix:   /
@@ -5,7 +15,7 @@ air_web_app:
 ya_data_collector:
     resource: "@YaDataCollectorBundle/Controller/"
     type:     annotation
-    prefix:   /
+    prefix:   /collector
 
 ya_core_model:
     resource: "@YaCoreModelBundle/Resources/config/routing.yml"

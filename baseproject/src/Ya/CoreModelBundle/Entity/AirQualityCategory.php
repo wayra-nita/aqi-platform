@@ -3,9 +3,6 @@
 namespace Ya\CoreModelBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
-use JMS\Serializer\Annotation\AccessType;
 use Ya\CoreModelBundle\Entity\Observation as Observation;
 
 /**
@@ -13,7 +10,6 @@ use Ya\CoreModelBundle\Entity\Observation as Observation;
  *
  * @ORM\Table("air_quality_category_enum")
  * @ORM\Entity(repositoryClass="Ya\CoreModelBundle\Entity\Repository\AirQualityCategoryRepository")
- * @ExclusionPolicy("none")
  */
 class AirQualityCategory
 {

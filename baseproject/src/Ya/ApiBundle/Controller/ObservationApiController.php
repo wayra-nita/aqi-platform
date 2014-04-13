@@ -13,14 +13,14 @@ class ObservationApiController extends FOSRestController {
 
     /**
      * @Method("GET")
-     * @Route("/api/observation/", name = "api_get_observation")
+     * @Route("/api/observation", name = "api_get_observation")
      */
-    public function getObservationAction() {
-        $em = $this->getDoctrine()->getManager();
-        $observations = $em->getRepository('YaCoreModelBundle:Observation')
-                ->findAll();
-
-        return new \Symfony\Component\HttpFoundation\Response($this->get('serializer')->serialize($observations, "json"));
+    public function getObservationAction()
+    {
+      $consumer = $this->container->get('consumer.visualization');
+      $observations = $consumer->getAverageByCountry();
+      echo json_encode($observations);
+      exit;
     }
 
     /**
@@ -45,11 +45,22 @@ class ObservationApiController extends FOSRestController {
         $observation = $this->setIfAvailable($observation, $observationData, 'time_zone');
         $observation = $this->setFromRepositoryById($observation, $observationData, 'sequence_id', 'SequenceEnum', 'setSequence');
         $observation = $this->setFromRepositoryById($observation, $observationData, 'data_type_id', 'DataTypeEnum', 'setDataType');
+
         $observation = $this->setIfAvailable($observation, $observationData, 'valid_date');
         if (isset($observationData['air_quality'])) {
             $airQualityCategory = $em->getRepository('YaCoreModelBundle:AirQualityCategory')->getByAqiValue($observationData['air_quality']);
             $observation->setAirQualityCategory($airQualityCategory);
         }
+        if (isset($observation['country_code'])
+                && isset($observation['region_code'])
+                && isset($observation['city_name'])
+                && isset($observation['latitude'])
+                && isset($observation['longitude'])) {
+            $reportingArea = $em->getRepository('YaCoreModelBundle:ReportingArea')
+                    ->getOrCreateReportingArea($observation['country_code'], $observation['region_code'], $observation['city_name'], $observation['latitude'], $observation['longitude']);
+            $observation->setReportingArea($reportingArea);
+        }
+        
         // get $reportingArea
         $observation = $this->setIfAvailable($observation, $observationData, 'is_primary', 0);
         $observation = $this->setIfAvailable($observation, $observationData, 'parameter_name');
@@ -60,10 +71,6 @@ class ObservationApiController extends FOSRestController {
 
         $em->persist($observation);
         $em->flush();
-
-        $response = new Response();
-        $response->setStatusCode('200', 'Record added');
-        return $response;
     }
 
     private function setFromRepositoryById(Observation $observation, $data, $source, $className, $method = null, $bundle = 'YaCoreModelBundle') {
@@ -88,13 +95,11 @@ class ObservationApiController extends FOSRestController {
         return null;
     }
 
-    private function setIfAvailable(Observation $observation, $data, $source, $default = null) {
+    private function setIfAvailable(Observation $observation, $data, $source) {
         $data = $this->getIfAvailable($data, $source);
         $method = $this->getMethod($source, 'set');
         if ($data) {
             $observation->$method($data);
-        } elseif ($default !== null) {
-            $observation->$method($default);
         }
         return $observation;
     }

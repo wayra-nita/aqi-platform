@@ -22,27 +22,6 @@ use Ya\CoreModelBundle\Entity\SequenceEnum as SequenceEnum;
   const FIELDS_COUNT_EXPECTED = 17;
   const COUNTRY_CODE = 'US';
   const PARTNER_NAME = 'AirNow';
-  /**
-   * @var Doctrine\ORM\EntityManager
-   */
-  private $em;
-
-  /**
-   * @var Symfony\Component\HttpKernel
-   */
-  private $kernel;
-
-  /**
-   * @var array
-   */
-  private $parsedData = array();
-
-  public function __construct($em, $kernel)
-  {
-    $this->em = $em;
-    $this->kernel = $kernel;
-    $this->initialize();
-  }
 
   public function collectData()
   {
@@ -51,13 +30,7 @@ use Ya\CoreModelBundle\Entity\SequenceEnum as SequenceEnum;
     {
       return $result;
     }
-    $this->parseFile();
-    die('collect');
-  }
-
-  protected function initialize()
-  {
-
+    return $this->parseFile();
   }
 
   protected function downloadFile()
@@ -127,6 +100,11 @@ use Ya\CoreModelBundle\Entity\SequenceEnum as SequenceEnum;
     $observation->setDiscussion(trim($fields[15]));
     $observation->setForecastSource(trim($fields[16]));
     $this->em->persist($observation);
+  }
+
+  protected function initialize()
+  {
+
   }
 
 }

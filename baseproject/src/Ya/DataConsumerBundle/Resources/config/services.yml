@@ -1,0 +1,9 @@
+parameters:
+    consumer.visualization.class: Ya\DataConsumerBundle\Services\VisualizationService
+ 
+services:
+    consumer.visualization:
+        class: "%consumer.visualization.class%"
+        arguments:
+          em: @doctrine.orm.entity_manager
+          kernel: @kernel

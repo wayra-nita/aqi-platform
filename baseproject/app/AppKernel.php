@@ -34,6 +34,8 @@
         new Ya\CoreModelBundle\YaCoreModelBundle(),
         new Ya\DataCollectorBundle\YaDataCollectorBundle(),
         new Air\WebAppBundle\AirWebAppBundle(),
+        new Ya\ApiBundle\YaApiBundle(),
+        new Ya\DataConsumerBundle\YaDataConsumerBundle(),
       );
 
       if (in_array($this->getEnvironment(), array('dev', 'test'))) {

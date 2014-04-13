@@ -3,17 +3,14 @@
 namespace Ya\CoreModelBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
-use JMS\Serializer\Annotation\AccessType;
 use Ya\CoreModelBundle\Entity\City as City;
+use Ya\CoreModelBundle\Entity\Observation as Observation;
 
 /**
  * ReportingArea
  *
  * @ORM\Table("reporting_area")
  * @ORM\Entity(repositoryClass="Ya\CoreModelBundle\Entity\Repository\ReportingAreaRepository")
- * @ExclusionPolicy("none")
  */
 class ReportingArea
 {
@@ -23,6 +20,7 @@ class ReportingArea
    * @ORM\Column(name="id", type="integer")
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="AUTO")
+   *
    */
   protected $id;
 
