@@ -1,4 +1,0 @@
-ya_api_annotation:
-    resource: "@YaApiBundle/Controller/"
-    type:     annotation
-    prefix:   /
