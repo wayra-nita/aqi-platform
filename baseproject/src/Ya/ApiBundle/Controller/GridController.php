@@ -36,10 +36,21 @@ class GridController extends FOSRestController {
             }
             //$average = $visualization->getAverageByQuadrant(60,147,63,149);
             $average = $visualization->getAverageByQuadrant($square['ne']['lt'], $square['ne']['lg'], $square['sw']['lt'], $square['sw']['lg']);
-            $airQualityCategory = $em->getRepository('YaCoreModelBundle:AirQualityCategory')->getByAqiValue($average);
-            $square['color'] = $airQualityCategory->getColorCode();
+            $airQualityCategory = $em->getRepository('YaCoreModelBundle:AirQualityCategory')->getByAqiValue((int)round($average));
+            $airQualityCategory = $airQualityCategory[0];
+            $square['color'] = $this->convertRgbToHex($airQualityCategory->getColorCode());
             $square['name']  = $airQualityCategory->getName();
         }
+        return $squares;
+    }
+    
+    private function convertRgbToHex($rgb) {
+        $rgb = explode(',', $rgb);
+        $hex = "#";
+        $hex .= str_pad(dechex($rgb[0]), 2, "0", STR_PAD_LEFT);
+        $hex .= str_pad(dechex($rgb[1]), 2, "0", STR_PAD_LEFT);
+        $hex .= str_pad(dechex($rgb[2]), 2, "0", STR_PAD_LEFT);
+        return $hex;
     }
     
     private function getSquares($neLat, $neLng, $swLat, $swLng) {
