@@ -7,6 +7,7 @@
 __author__="jon"
 __date__ ="$Apr 12, 2014 12:57:32 PM$"
 
+from symbol import except_clause
 import flickrapi
 import json
 import urllib
@@ -53,17 +54,27 @@ for city in cities:
       photo_location = flickr.photos_geo_getLocation(photo_id=photo.attrib['id'])
       photo_size = flickr.photos_getSizes(photo_id=photo.attrib['id'])
 
+      imgloc = ""
+      
+      for indx in range(6, 1, -1):
+        #download image
+        try:
+            imgloc = photo_size[0][indx].attrib['source']
+            break
+        except:
+          continue
+      
       data_json = {
         "id": photo.attrib['id'],  
         "title": photo.attrib['title'],  
         "lat": photo_location[0][0].attrib['latitude'], 
         "long": photo_location[0][0].attrib['longitude'],
-        "imgloc": photo_size[0][6].attrib['source']
+        "imgloc": imgloc
       }
       #save image file
       with open(base_meta_dir+photo.attrib['id']+'.json', 'w') as outfile:
         json.dump(data_json, outfile)
-
-      #download image
-      urllib.urlretrieve(photo_size[0][6].attrib['source'], base_img_dir+photo.attrib['id']+'.jpg')
+        
+      urllib.urlretrieve(imgloc, base_img_dir+photo.attrib['id']+'.jpg')
+        
 #  exit(0)

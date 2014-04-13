@@ -10,15 +10,18 @@ __date__ ="$Apr 12, 2014 11:38:00 PM$"
 import urllib2
 import cookielib
 import poster
+import glob
+import os
+
 
 upload_url = "http://aqi.local/image"
 files_to_process_path = "metadata"
 files_processed_path = "uploaded"
 
 if __name__ == "__main__":
-  
-    
-  
+    for dir in filter(os.path.isdir, os.listdir("metadata")):
+      print dir
+    exit(0)
     print "Starting upload process";
     opener = poster.streaminghttp.register_openers()
     opener.add_handler(urllib2.HTTPCookieProcessor(cookielib.CookieJar())) # Add cookie handler
