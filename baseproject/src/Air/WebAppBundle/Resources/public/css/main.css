@@ -68,3 +68,7 @@ img.img_data_set{
     background-color: #4c0026;
     opacity: 0.6;
 }
+
+#links span {
+    font-size: 25px;
+}

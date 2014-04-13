@@ -91,7 +91,7 @@ var MapModel = Backbone.Model.extend({
      * @param {Array} coords A set of coordinates in which every row represents
      * 4 point to draw a rectangle area with a selected color
      */
-    drawPolygon: function (coords){
+    drawPolygon: function (coords, zoom){
         // Delete all squares
         $.each(this.get('polygonShapes'), function (i, shape){
             shape.setMap(null);
@@ -99,7 +99,7 @@ var MapModel = Backbone.Model.extend({
         this.set({polygonShapes: []});
         
         var paths = [];
-            
+            $('#links').html('');
         for (var i = 0; i < coords.length; i++)
         {
             var color = coords[i].color;
@@ -108,6 +108,15 @@ var MapModel = Backbone.Model.extend({
             var average = coords[i].average;
             if (color !== "#FFFFFF")
             {
+                if (zoom >= 6 && coords[i].resources.length > 0)
+                {
+                    this.loadGallery(coords[i].resources);
+                }
+                else if (zoom < 6)
+                {
+                    $('#links').html($('<span class="glyphicon glyphicon-picture"></span>'));
+                }
+
                 var nwLt = parseFloat(coords[i].coord.nw.lt);
                 var nwLg = parseFloat(coords[i].coord.nw.lg);
                 var neLt = parseFloat(coords[i].coord.ne.lt);
@@ -147,13 +156,15 @@ var MapModel = Backbone.Model.extend({
     },
 
     triggerZoomListener: function (){
+        $('#links').html($('<span class="glyphicon glyphicon-picture"></span>'));
         var self = this;
         google.maps.event.addListener(this.getGMap(), 'zoom_changed', function(ev){
             self.triggerMap();
             var bounds = self.getGMap().getBounds();
             var ne = bounds.getNorthEast(); // LatLng of the north-east corner
             var sw = bounds.getSouthWest(); // LatLng of the south-west corder            
-
+            var zoomVal = self.getGMap().getZoom();
+            
             $.ajax({
                 url: Routing.generate('api_get_grid_data'),
                 type: 'POST',
@@ -165,7 +176,7 @@ var MapModel = Backbone.Model.extend({
                     swLng: sw.lng()
                 },
                 success: function (grid){
-                    self.drawPolygon(grid);
+                    self.drawPolygon(grid, zoomVal);
                 }
             });
         });
@@ -192,8 +203,26 @@ var MapModel = Backbone.Model.extend({
                 swLng: sw.lng()
             },
             success: function (grid){
-                self.drawPolygon(grid);
+                self.drawPolygon(grid, self.get('zoom'));
             }
         });
+    },
+    
+    loadGallery: function (resources){
+        
+        var imgCont = $('#links');
+        for (var i = 0; i < resources.length; i++)
+        {
+            if (i >= 10)
+            {
+                break;
+            }
+            
+            var nA = '<a href="' +  resources[i].path + '" title="' + resources[i].name + '" data-gallery>\n\
+        \n\<img class="img_data_set" src="' +  resources[i].path + '" alt="' + resources[i].name + '">\n\
+            </a>';
+            imgCont.append(nA);
+        }
+        
     }
 });
