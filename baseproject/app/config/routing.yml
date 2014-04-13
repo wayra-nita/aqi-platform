@@ -1,3 +1,8 @@
+ya_api:
+    resource: "@YaApiBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 air_web_app:
     resource: "@AirWebAppBundle/Resources/config/routing.yml"
     prefix:   /
