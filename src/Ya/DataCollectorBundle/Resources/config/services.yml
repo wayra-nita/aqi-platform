@@ -1,0 +1,9 @@
+parameters:
+    collector.airnow.class: Ya\DataCollectorBundle\Services\AirNowService
+ 
+services:
+    collector.airnow:
+        class: "%collector.airnow.class%"
+        arguments:
+          em: @doctrine.orm.entity_manager
+          kernel: @kernel
