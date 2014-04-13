@@ -28,9 +28,11 @@ if __name__ == "__main__":
       for file in os.listdir(files_to_process_path + "/" + dir):
         if file.endswith(".json"):
           with open(files_to_process_path + "/" + dir + "/"+file) as json_file:
-            json_data = json.load(json_file)
-            print(str(json_data["id"]))
-            exit(0)
+            try:
+              json_data = json.load(json_file)
+            except:
+              continue
+            
             opener = poster.streaminghttp.register_openers()
             opener.add_handler(urllib2.HTTPCookieProcessor(cookielib.CookieJar())) # Add cookie handler
             params = {

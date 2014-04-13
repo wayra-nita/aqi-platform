@@ -29,9 +29,10 @@ def mkdir_p(path):
 api_key = "da3cea7cccd3240398c6af0630474dd7"
 flickr = flickrapi.FlickrAPI(api_key, cache=True)
 
-cities = ["Cochabamba, Bolivia", "Santa Cruz, Bolivia", "La Paz, Bolivia", "Des Moines,United States","Nipomo,United States","Las Vegas,United States","Paso Robles,United States","Atascadero,United States","San Luis Obispo,United States","Carrizo Plains,United States","Morro Bay,United States","Red Hills,United States","El Paso,United States","Springfield,United States","Laredo,United States","Austin,United States","Beaumont-Port Arthur,United States","Houston-Galveston-Brazoria,United States","Oxnard,United States","Waco-Killeen,United States","Phoenix,United States","Tyler-Longview-Marshall,United States","Columbus,United States","Brownsville-McAllen,United States","Dallas-Fort Worth,United States","San Antonio,United States","Youngstown,United States","Simi Valley,United States","Lake Elsinore,United States","Louisville,United States","Central LA CO,United States","Grand Junction,United States","Norco/Corona,United States"]
-
+cities = ["Des Moines,United States","Nipomo,United States","Las Vegas,United States","Paso Robles,United States","Atascadero,United States","San Luis Obispo,United States","Carrizo Plains,United States","Morro Bay,United States","Red Hills,United States","El Paso,United States","Springfield,United States","Laredo,United States","Austin,United States","Beaumont-Port Arthur,United States","Houston-Galveston-Brazoria,United States","Oxnard,United States","Waco-Killeen,United States","Phoenix,United States","Tyler-Longview-Marshall,United States","Columbus,United States","Brownsville-McAllen,United States","Dallas-Fort Worth,United States","San Antonio,United States","Youngstown,United States","Simi Valley,United States","Lake Elsinore,United States","Louisville,United States","Central LA CO,United States","Grand Junction,United States","Norco/Corona,United States"]
+limit = 1000
 for city in cities:
+  sum = 0
   results = Geocoder.geocode(city)
   r_lat = str(results[0].coordinates[0])
   r_long = str(results[0].coordinates[1])
@@ -43,14 +44,17 @@ for city in cities:
   mkdir_p(base_img_dir)
   
   for index in range(1,10):
+    if sum >= limit:
+      break
+      
     photos = flickr.photos_search(tags='cielo, sky, paisaje, landscape', has_geo=1, page=index, per_page= 100, lat=r_lat, lon=r_long, radius='20')  
     for photo in photos[0]:
-
+      sum = sum + 1
       if os.path.isfile(base_meta_dir+photo.attrib['id']+'.json'):
         continue
 
       print("downloading file "+photo.attrib['id'] + " to dir " + name_city)
-
+      
       photo_location = flickr.photos_geo_getLocation(photo_id=photo.attrib['id'])
       photo_size = flickr.photos_getSizes(photo_id=photo.attrib['id'])
 
