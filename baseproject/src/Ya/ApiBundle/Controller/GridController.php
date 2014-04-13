@@ -7,6 +7,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\FOSRestController;
+use Ya\DataConsumerBundle\Services\VisualizationService;
+use Ya\CoreModelBundle\Entity\AirQualityCategory;
 
 
 class GridController extends FOSRestController {
@@ -18,7 +20,25 @@ class GridController extends FOSRestController {
      */
     public function getGridAction(Request $request, $neLat, $neLng, $swLat, $swLng) {
         $squares = $this->getSquares($neLat, $neLng, $swLat, $swLng);
+        $squares = $this->fillColors($squares);
         return new Response($this->get('serializer')->serialize($squares, "json"));
+    }
+    
+    private function fillColors($squares) {
+        $visualization = new VisualizationService();
+        foreach ($squares as &$square) {
+            $count = $visualization->getCountInQuadrant($square['ne']['lt'], $square['ne']['lg'], $square['sw']['lt'], $square['sw']['lg']);
+            if (!$count) {
+                $square['color'] = '#FFFFFF';
+                $square['name']  = 'Not enough data';
+                continue;
+            }
+            //$average = $visualization->getAverageByQuadrant(60,147,63,149);
+            $average = $visualization->getAverageByQuadrant($square['ne']['lt'], $square['ne']['lg'], $square['sw']['lt'], $square['sw']['lg']);
+            $airQualityCategory = $this->em->getRepository('YaCoreModelBundle:AirQualityCategory')->getByAqiValue($average);
+            $square['color'] = $airQualityCategory->getColorCode();
+            $square['name']  = $airQualityCategory->getName();
+        }
     }
     
     private function getSquares($neLat, $neLng, $swLat, $swLng) {
