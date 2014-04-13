@@ -4,8 +4,9 @@ var MapModel = Backbone.Model.extend({
         id_container: '',
         latitude: 24.886436490787712,
         longitude: -70.2685546875,
-        zoom: 8,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        zoom: 6,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        polygonShapes: []
     },
     
     initialize: function (idContainer){
@@ -16,7 +17,7 @@ var MapModel = Backbone.Model.extend({
         return new google.maps.LatLng(this.get('latitude'), this.get('longitude'));
     },
     
-    createGMapObject: function (){
+    createGMapObject: function (){        
         var mapOptions = {
             center: this.createLatLngCenter(),
             zoom: this.get('zoom'),
@@ -24,7 +25,6 @@ var MapModel = Backbone.Model.extend({
         };
         var map = new google.maps.Map(document.getElementById(this.get('id_container')), mapOptions);
         this.set('gMap', map);
-        console.log(this.getGMap(), map);
     },
         
     
@@ -42,7 +42,7 @@ var MapModel = Backbone.Model.extend({
 //              imageBounds);
 //            oldmap.setMap(map);
             self.triggerZoomListener();
-        }
+        }        
       google.maps.event.addDomListener(window, 'load', initializeMap);      
       
     },
@@ -92,63 +92,66 @@ var MapModel = Backbone.Model.extend({
      * 4 point to draw a rectangle area with a selected color
      */
     drawPolygon: function (coords){
+        // Delete all squares
+        $.each(this.get('polygonShapes'), function (i, shape){
+            shape.setMap(null);
+        });
+        this.set({polygonShapes: []});
+        
         var paths = [];
-        for (var i in coords)
+            
+        for (var i = 0; i < coords.length; i++)
         {
-            var nwLt = coords[i].coord.nw.lt;
-            var nwLg = coords[i].coord.nw.lg;
-            var neLt = coords[i].coord.ne.lt;
-            var neLg = coords[i].coord.ne.lg;
-            var swLt = coords[i].coord.sw.lt;
-            var swLg = coords[i].coord.sw.lg;
-            var seLt = coords[i].coord.se.lt;
-            var seLg = coords[i].coord.se.lg;
-            
-            var p1 = new google.maps.LatLng(nwLt, nwLg);
-            var p2 = new google.maps.LatLng(neLt, neLg);
-            var p3 = new google.maps.LatLng(seLt, seLg);
-            var p4 = new google.maps.LatLng(swLt, swLg);            
-            
-            paths.push(p1);
-            paths.push(p2);
-            paths.push(p2);
-            paths.push(p3);
-            paths.push(p3);
-            paths.push(p4);
-            paths.push(p4);
-            paths.push(p1);
-            
-            var color = "#ff0000";
-            var shape = new google.maps.Polygon({
-                paths: paths,
-                strokeColor: color,
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: color,
-                fillOpacity: 0.35
-            });
+            var color = coords[i].color;
 
-            shape.setMap(this.getGMap());
-        }                
+            var name = coords[i].name;
+            if (color !== "#FFFFFF")
+            {
+                var nwLt = parseFloat(coords[i].coord.nw.lt);
+                var nwLg = parseFloat(coords[i].coord.nw.lg);
+                var neLt = parseFloat(coords[i].coord.ne.lt);
+                var neLg = parseFloat(coords[i].coord.ne.lg);
+                var swLt = parseFloat(coords[i].coord.sw.lt);
+                var swLg = parseFloat(coords[i].coord.sw.lg);
+                var seLt = parseFloat(coords[i].coord.se.lt);
+                var seLg = parseFloat(coords[i].coord.se.lg);
+
+                var p4 = new google.maps.LatLng(nwLt, nwLg);
+                var p3 = new google.maps.LatLng(neLt, neLg);
+                var p2 = new google.maps.LatLng(seLt, seLg);
+                var p1 = new google.maps.LatLng(swLt, swLg); 
+
+                paths.push(p1);
+                paths.push(p2);
+                paths.push(p3);
+                paths.push(p4);
+
+                var shape = new google.maps.Polygon({
+                    paths: paths,
+                    strokeColor: color,
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: color,
+                    fillOpacity: 0.35
+                });
+
+                shape.setMap(this.getGMap());
+                var allShapes = this.get('polygonShapes');
+                allShapes.push(shape);
+                this.set({polygonShapes: allShapes});
+
+                paths = [];
+            }
+        }                                          
     },
 
     triggerZoomListener: function (){
         var self = this;
         google.maps.event.addListener(this.getGMap(), 'idle', function(ev){
+            self.triggerMap();
             var bounds = self.getGMap().getBounds();
             var ne = bounds.getNorthEast(); // LatLng of the north-east corner
-            var sw = bounds.getSouthWest(); // LatLng of the south-west corder
-            
-            var coords = [
-                {coord: {
-                         nw: {lt: ne.lat(), lg: sw.lng()}, 
-                         ne: {lt: ne.lat(), lg: ne.lng()}, 
-                         sw: {lt: sw.lat(), lg: sw.lng()}, 
-                         se: {lt: sw.lat(), lg: ne.lng()}
-                        }, 
-                 color: '#ff0000', 
-                 name: 'Good'}                
-            ];
+            var sw = bounds.getSouthWest(); // LatLng of the south-west corder            
             
             $.ajax({
                 url: Routing.generate('api_get_grid_data'),
@@ -161,11 +164,10 @@ var MapModel = Backbone.Model.extend({
                     swLng: sw.lng()
                 },
                 success: function (grid){
+                    console.log(grid)
                     self.drawPolygon(grid);
                 }
-            });
-            
-                        
+            });            
         });
     },
     

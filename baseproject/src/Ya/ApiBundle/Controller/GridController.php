@@ -12,8 +12,8 @@ use Ya\CoreModelBundle\Entity\AirQualityCategory;
 
 
 class GridController extends FOSRestController {
-    private static $horizontalSegments = 3;
-    private static $verticalSegments   = 3;
+    private static $horizontalSegments = 20;
+    private static $verticalSegments   = 20;
     /**
      * @Method("POST")
      * @Route("/api/get_grid", name = "api_get_grid_data", options = {"expose"=true})
