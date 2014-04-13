@@ -26,15 +26,15 @@ class ObservationRepository extends EntityRepository
   
   public function getCountInQuadrant($lat1, $lon1, $lat2, $lon2)
   {
-    $sql = "SELECT COUNT(o.aqi_value) FROM observation o
+    $sql = "SELECT COUNT(o.aqi_value) as average FROM observation o
 LEFT JOIN reporting_area ra ON ra.id = o.reporting_area_id
 WHERE o.parameter_name = 'PM2.5'
 AND o.aqi_value <> 0
-AND (ra.latitude >= ? AND ra.latitude <= ?) AND (ra.longitude >= ? AND ra.longitude <= ?)";
-
+AND (ra.latitude >= :lat1 AND ra.latitude <= :lat2) AND (ra.longitude >= :lon1 AND ra.longitude <= :lon2)";
     $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
-    $stmt->execute(array($lat1, $lon1, $lat2, $lon2));
-    return($stmt->fetchAll());
+    $stmt->execute(array('lat1' => $lat1, 'lat2' => $lat2, 'lon1' => $lon1, 'lon2' => $lon2));
+    $average = $stmt->fetch();
+    return $average['average'];
     /*$em = $this->getEntityManager();
     $query = $em->createQueryBuilder()
       ->select('COUNT(o.aqiValue)')
@@ -51,14 +51,14 @@ AND (ra.latitude >= ? AND ra.latitude <= ?) AND (ra.longitude >= ? AND ra.longit
 
   public function getByQuadrant($lat1, $lon1, $lat2, $lon2)
   {
-    $sql = "SELECT AVG(o.aqi_value) FROM observation o
+    $sql = "SELECT AVG(o.aqi_value) as average FROM observation o
 LEFT JOIN reporting_area ra ON ra.id = o.reporting_area_id
 WHERE o.parameter_name = 'PM2.5'
 AND o.aqi_value <> 0
-AND (ra.latitude >= ? AND ra.latitude <= ?) AND (ra.longitude >= ? AND ra.longitude <= ?)";
-
+AND (ra.latitude >= :lat1 AND ra.latitude <= :lat2) AND (ra.longitude >= :lon1 AND ra.longitude <= :lon2)";
     $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
-    $stmt->execute(array($lat1, $lon1, $lat2, $lon2));
-    return($stmt->fetchAll());
+    $stmt->execute(array('lat1' => $lat1, 'lat2' => $lat2, 'lon1' => $lon1, 'lon2' => $lon2));
+    $average = $stmt->fetch();
+    return $average['average'];
   }
 }

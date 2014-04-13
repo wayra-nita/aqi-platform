@@ -17,10 +17,13 @@ class ObservationApiController extends FOSRestController {
      */
     public function getObservationAction()
     {
+      $em = $this->getDoctrine()->getEntityManager();
       $consumer = $this->container->get('consumer.visualization');
-      $observations = $consumer->getAverageByQuadrant();
-      var_dump(count($observations)); exit;
-      echo json_encode($observations);
+      $average = $consumer->getAverageByQuadrant(32.9, -112.072, 43.1105, -110.972);
+      $average = (int)round($average);
+      $airQualityCategory = $em->getRepository('YaCoreModelBundle:AirQualityCategory')->getByAqiValue($average);
+      var_dump($average, $airQualityCategory);
+      //echo json_encode($observations);
       exit;
     }
 

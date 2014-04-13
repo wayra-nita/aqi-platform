@@ -32,17 +32,18 @@ class GridController extends FOSRestController {
         $em = $this->getDoctrine()->getEntityManager();
         $visualization = $this->container->get('consumer.visualization');
         foreach ($squares as &$square) {
+            $square = $square['coord'];
             $count = $visualization->getCountInQuadrant($square['ne']['lt'], $square['ne']['lg'], $square['sw']['lt'], $square['sw']['lg']);
             if (!$count) {
                 $square['color'] = '#FFFFFF';
                 $square['name']  = 'Not enough data';
                 continue;
             }
-            //$average = $visualization->getAverageByQuadrant(60,147,63,149);
+            //$average = $visualization->getAverageByQuadrant(32.9, -112.072, 43.1105, -110.972);
             $average = $visualization->getAverageByQuadrant($square['ne']['lt'], $square['ne']['lg'], $square['sw']['lt'], $square['sw']['lg']);
             $average = (int)round($average);
             $airQualityCategory = $em->getRepository('YaCoreModelBundle:AirQualityCategory')->getByAqiValue($average);
-            //$airQualityCategory = $airQualityCategory[0];
+            $airQualityCategory = $airQualityCategory[0];
             $square['color'] = $this->convertRgbToHex($airQualityCategory->getColorCode());
             $square['name']  = $airQualityCategory->getName();
         }
